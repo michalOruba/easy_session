@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Field Form</title>
+    <th:block th:insert="fragments/header.html::headerfiles"/>
+</head>
+<body>
+<div class="container">
+    <h3>Field of Study</h3>
+    <hr>
+
+    <p>Save Field of Study</p>
+
+    <form action="#" th:action="@{/fields/save}" th:object="${fieldOfStudy}" method="POST">
+        <input type="text" th:field="*{name}" class="form-control mb-4 col-4" placeholder="Field name"/>
+        <button type="submit" class="btn btn-success col-2">Save</button>
+    </form>
+
+    <hr>
+    <a th:href="@{/fields/list}">Back to Field List</a>
+
+</div>
+
+
+</body>
+</html>

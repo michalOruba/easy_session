@@ -7,6 +7,8 @@ USE `easy_session`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS `student`;
+
 CREATE TABLE `student` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `first_name` varchar(50) DEFAULT NULL,
@@ -17,6 +19,8 @@ CREATE TABLE `student` (
     `specialization_id` int(11) DEFAULT NULL,
 
     PRIMARY KEY (`id`),
+
+    KEY `FK_SESSION_STU_idx` (`session_id`),
 
     CONSTRAINT `FK_SESSION_STU`
     FOREIGN KEY (`session_id`)
@@ -30,6 +34,8 @@ CREATE TABLE `student` (
 
 -- CREATE SESSION TABLE
 
+DROP TABLE IF EXISTS `session`;
+
 CREATE TABLE `session` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `status` tinyint(1) DEFAULT 0,
@@ -37,6 +43,8 @@ CREATE TABLE `session` (
     `student_id` int(11) DEFAULT NULL,
 
     PRIMARY KEY (`id`),
+
+    KEY `FK_STUDENT_SES_idx` (`student_id`),
 
     CONSTRAINT `FK_STUDENT_SES`
     FOREIGN KEY (`student_id`)
@@ -46,6 +54,8 @@ CREATE TABLE `session` (
 
 -- CREATE SUBJECT LIST TABLE
 
+DROP TABLE IF EXISTS `subject_grade_map`;
+
 CREATE TABLE `subject_grade_map` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `is_passed` tinyint(1) DEFAULT 0,
@@ -53,6 +63,9 @@ CREATE TABLE `subject_grade_map` (
     `session_id` int(11) DEFAULT NULL,
 
     PRIMARY KEY (`id`),
+
+    KEY `FK_SESSION_SGM_idx` (`session_id`),
+
 
     CONSTRAINT `FK_SUBJECT_SGM`
     FOREIGN KEY (`subject_id`)
@@ -65,6 +78,8 @@ CREATE TABLE `subject_grade_map` (
 
 -- CREATE SUBJECT TABLE
 
+DROP TABLE IF EXISTS `subject`;
+
 CREATE TABLE `subject` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(150) DEFAULT NULL,
@@ -75,12 +90,17 @@ CREATE TABLE `subject` (
 
     PRIMARY KEY (`id`),
 
+    KEY `FK_SPECIALIZATION_SUB_idx` (`specialization_id`),
+
+
     CONSTRAINT `FK_SPECIALIZATION_SUB`
     FOREIGN KEY (`specialization_id`)
     REFERENCES `specialization` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 -- CREATE SPECIALIZATION TABLE
+
+DROP TABLE IF EXISTS `specialization`;
 
 CREATE TABLE `specialization` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -91,12 +111,16 @@ CREATE TABLE `specialization` (
 
     PRIMARY KEY (`id`),
 
+    KEY `FK_FIELD_OF_STUDY_SPE_idx` (`field_of_study_id`),
+
     CONSTRAINT `FK_FIELD_OF_STUDY_SPE`
     FOREIGN KEY (`field_of_study_id`)
     REFERENCES `field_of_study` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 -- CREATE FIELD_OF_STUDY TABLE
+
+DROP TABLE IF EXISTS `field_of_study`;
 
 CREATE TABLE `field_of_study` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
