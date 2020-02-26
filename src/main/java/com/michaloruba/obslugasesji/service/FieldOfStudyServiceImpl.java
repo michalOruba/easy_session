@@ -2,6 +2,7 @@ package com.michaloruba.obslugasesji.service;
 
 import com.michaloruba.obslugasesji.dao.FieldOfStudyRepository;
 import com.michaloruba.obslugasesji.entity.FieldOfStudy;
+import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class FieldOfStudyServiceImpl implements FieldOfStudyService {
             fieldOfStudy = result.get();
         }
         else {
-            throw new RuntimeException("Did not find field of study id - " + id);
+            throw new NotFoundException("Did not find field of study id - " + id);
         }
         return fieldOfStudy;
     }
