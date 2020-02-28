@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Specialization form</title>
+    <th:block th:insert="/fragments/header.html :: headerfiles"/>
+</head>
+<body>
+<div class="container">
+    <h3>Specialization</h3>
+    <hr>
+
+    <p>Save Specialization</p>
+
+    <form th:action="@{/specs/saveSpec}" th:object="${specialization}" method="POST">
+        <input type="text" th:field="*{specKind.name}" class="form-control mb-4 col-4" placeholder="Name">
+        <input type="date" th:field="*{startDate}" class="form-control mb-4 col-4" placeholder="Start Date">
+        <input type="date" th:field="*{endDate}" class="form-control mb-4 col-4" placeholder="End Date">
+        <button type="submit" class="btn btn-sm btn-success col-2">Save</button>
+    </form>
+
+    <hr>
+    <a th:href="@{/specs/list}">Back to specializations list</a>
+    <div th:replace="/fragments/footer.html :: footer"> </div>
+</div>
+</body>
+</html>

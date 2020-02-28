@@ -3,6 +3,7 @@ package com.michaloruba.obslugasesji.entity;
 import javax.persistence.*;
 
 @Entity
+@DiscriminatorValue("1")
 public class InformationTechnology extends FieldOfStudy {
     private boolean hasComputers;
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Specializations List</title>
+    <th:block th:insert="fragments/header.html :: headerfiles"/>
+</head>
+<body>
+<div class="container">
+    <h3>Specializations List</h3>
+    <hr>
+
+    <a th:href="@{/specs/showFormForSelectField}" class="btn btn-sm btn-success mb-3">Add Specialization</a>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Field Of Study</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:each="spec : ${specializations}">
+            <td th:text="${spec.specKind.name}"></td>
+            <td th:text="${spec.startDate}"></td>
+            <td th:text="${spec.endDate}"></td>
+            <td th:text="${spec.specKind.fieldOfStudy.name}"></td>
+            <td>
+                <a th:href="@{/specs/showFormForUpdate(specId=${spec.id})}" class="btn btn-sm btn-warning mr-3">Update</a>
+                <a th:href="@{/specs/deleteSpec(specId=${spec.id})}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <div th:replace="fragments/footer.html :: footer"> </div>
+</div>
+
+
+</body>
+</html>

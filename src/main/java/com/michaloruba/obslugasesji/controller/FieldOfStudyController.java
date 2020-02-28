@@ -40,7 +40,7 @@ public class FieldOfStudyController {
     }
 
     @PostMapping("/save")
-    public String saveField(@ModelAttribute("fieldOfStudy") FieldOfStudy fieldOfStudy){
+    public String saveField(@ModelAttribute("fieldOfStudy") InformationTechnology fieldOfStudy){
         fieldOfStudyService.save(fieldOfStudy);
 
         return "redirect:/fields/list";
