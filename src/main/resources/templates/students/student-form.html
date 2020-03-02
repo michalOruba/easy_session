@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Field Form</title>
+    <th:block th:insert="fragments/header.html::headerfiles"/>
+</head>
+<body>
+<div class="container">
+    <h3>Field of Study</h3>
+    <hr>
+
+    <p>Save Field of Study</p>
+
+    <form action="#" th:action="@{/students/save}" th:object="${student}" method="POST">
+        <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
+        <input type="text" th:field="*{firstName}" class="form-control mb-4 col-4" placeholder="First name"/>
+        <input type="text" th:field="*{lastName}" class="form-control mb-4 col-4" placeholder="Last name"/>
+        <input type="text" th:field="*{email}" class="form-control mb-4 col-4" placeholder="Email"/>
+        <input type="text" th:field="*{semester}" class="form-control mb-4 col-4" placeholder="Semester"/>
+<!--        <input type="text" th:field="${student.specialization eq null} ? ${'None'} : ${student.specialization.specKind.name}" class="form-control mb-4 col-4" placeholder="Specialization"/>-->
+        <select class="form-control mb-4 col-4" id="specId" name="specId">
+            <option
+                    th:each="spec: ${specs}"
+                    th:value="${spec.id}"
+                    th:text="${spec.specKind.name}"
+                    th:selected="${student.specialization eq null or spec.specKind.id != student.specialization.specKind.id} ? false : true">
+            </option>
+        </select>
+
+        <input type="text" th:field="*{firstName}" class="form-control mb-4 col-4" placeholder="Current session"/>
+        <button type="submit" class="btn btn-success col-2">Save</button>
+    </form>
+
+    <hr>
+    <a th:href="@{/students/list}">Back to Field List</a>
+
+</div>
+
+
+</body>
+</html>

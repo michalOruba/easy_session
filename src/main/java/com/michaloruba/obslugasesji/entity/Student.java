@@ -1,27 +1,40 @@
 package com.michaloruba.obslugasesji.entity;
 
+import javax.persistence.*;
+
+@Entity
 public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "email")
     private String email;
+    @Column(name = "semester")
     private int semester;
-    private Session session;
-    private Specialization specialization;
-    private FieldOfStudy fieldOfStudy;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+//    @JoinColumn(name = "session_id")
+//    private Session session;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "specialization_id")
+    private InformationSpecialization specialization;
 
 
     public Student() {
     }
 
-    public Student(String firstName, String lastName, String email, int semester, Session session,Specialization specialization, FieldOfStudy fieldOfStudy) {
+    public Student(String firstName, String lastName, String email, int semester, Session session, InformationSpecialization specialization) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.semester = semester;
-        this.session = session;
+//        this.session = session;
         this.specialization = specialization;
-        this.fieldOfStudy = fieldOfStudy;
     }
 
     public int getId() {
@@ -64,29 +77,21 @@ public class Student {
         this.semester = semester;
     }
 
-    public Session getSession() {
-        return session;
-    }
+//    public Session getSession() {
+//        return session;
+//    }
+//
+//    public void setSession(Session session) {
+//        this.session = session;
+//    }
 
-    public void setSession(Session session) {
-        this.session = session;
-    }
 
-
-    public Specialization getSpecialization() {
+    public InformationSpecialization getSpecialization() {
         return specialization;
     }
 
-    public void setSpecialization(Specialization specialization) {
+    public void setSpecialization(InformationSpecialization specialization) {
         this.specialization = specialization;
-    }
-
-    public FieldOfStudy getFieldOfStudy() {
-        return fieldOfStudy;
-    }
-
-    public void setFieldOfStudy(FieldOfStudy fieldOfStudy) {
-        this.fieldOfStudy = fieldOfStudy;
     }
 
     @Override
@@ -97,9 +102,8 @@ public class Student {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", semester=" + semester +
-                ", session=" + session +
+//                ", session=" + session +
                 ", specialization=" + specialization +
-                ", fieldOfStudy=" + fieldOfStudy +
                 '}';
     }
 }
