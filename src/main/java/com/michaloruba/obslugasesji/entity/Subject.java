@@ -1,12 +1,25 @@
 package com.michaloruba.obslugasesji.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "subject")
 public class Subject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "hours")
     private double hours;
+    @Column(name = "ECTS")
     private int ECTS;
+    @Column(name = "semester")
     private int semester;
-    private Specialization specialization;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "specialization_id")
+    private InformationSpecialization specialization;
 
     public Subject() {
     }
@@ -58,11 +71,11 @@ public class Subject {
         this.semester = semester;
     }
 
-    public Specialization getSpecialization() {
+    public InformationSpecialization getSpecialization() {
         return specialization;
     }
 
-    public void setSpecialization(Specialization specialization) {
+    public void setSpecialization(InformationSpecialization specialization) {
         this.specialization = specialization;
     }
 

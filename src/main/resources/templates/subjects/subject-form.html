@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subject Form</title>
+    <th:block th:insert="fragments/header.html::headerfiles"/>
+</head>
+<body>
+<div class="container">
+    <h3>Subject</h3>
+    <hr>
+
+    <p>Save Subject</p>
+
+    <form action="#" th:action="@{/subjects/save}" th:object="${subject}" method="POST">
+        <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4"/>
+        <input type="text" th:field="*{name}" class="form-control mb-4 col-4" placeholder="Name"/>
+        <input type="text" th:field="*{hours}" class="form-control mb-4 col-4" placeholder="Hours"/>
+        <input type="text" th:field="*{ECTS}" class="form-control mb-4 col-4" placeholder="ECTS"/>
+        <input type="text" th:field="*{semester}" class="form-control mb-4 col-4" placeholder="Semester"/>
+        <select class="form-control mb-4 col-4" id="specId" name="specId" th:field="*{specialization}">
+            <option
+                    th:each="spec: ${specs}"
+                    th:value="${spec.id}"
+                    th:text="${spec.specKind.name}"
+                    th:selected="${subject.specialization eq null or spec.specKind.id != subject.specialization.specKind.id} ? false : true">
+            </option>
+        </select>
+        <button type="submit" class="btn btn-success col-2">Save</button>
+    </form>
+
+    <hr>
+    <a th:href="@{/subjects/list}">Back to Subject List</a>
+
+</div>
+
+
+</body>
+</html>
