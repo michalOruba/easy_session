@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SpecKindRepository extends JpaRepository<SpecKind, Integer> {
-    public List<SpecKind> findByFieldOfStudy_Id(int id);
+    List<SpecKind> findByFieldOfStudy_Id(int id);
 }

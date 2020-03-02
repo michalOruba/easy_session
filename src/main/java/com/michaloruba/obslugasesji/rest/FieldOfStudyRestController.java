@@ -37,7 +37,6 @@ public class FieldOfStudyRestController {
 
     @PostMapping("/fields")
     public FieldOfStudy addField(@RequestBody FieldOfStudy fieldOfStudy){
-        System.out.println(fieldOfStudy.getName());
         fieldOfStudy.setId(0);
         fieldOfStudyService.save(fieldOfStudy);
         return  fieldOfStudy;

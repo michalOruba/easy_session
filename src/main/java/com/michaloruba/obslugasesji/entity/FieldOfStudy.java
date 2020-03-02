@@ -1,8 +1,6 @@
 package com.michaloruba.obslugasesji.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -19,9 +17,6 @@ public class FieldOfStudy {
     private int id;
     @Column(name = "name")
     private String name;
-
-    @OneToMany(mappedBy = "fieldOfStudy")
-    List<SpecKind> specializations = new ArrayList<>();
 
     public FieldOfStudy() {
     }
@@ -44,32 +39,5 @@ public class FieldOfStudy {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<SpecKind> getSpecializations() {
-        return specializations;
-    }
-
-    public void setSpecializations(List<SpecKind> specializations) {
-        this.specializations = specializations;
-    }
-
-    void addField(SpecKind specKind, boolean set){
-        if (specKind != null) {
-            if(getSpecializations().contains(specKind)){
-                getSpecializations().set(getSpecializations().indexOf(specKind), specKind);
-            }
-            else{
-                getSpecializations().add(specKind);
-            }
-            if (set){
-                specKind.setFieldOfStudy(this, false);
-            }
-        }
-    }
-
-    public void removeSpec(SpecKind specKind){
-        getSpecializations().remove(specKind);
-        specKind.setFieldOfStudy(null);
     }
 }

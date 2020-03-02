@@ -1,9 +1,7 @@
 package com.michaloruba.obslugasesji.controller;
 
-import com.michaloruba.obslugasesji.entity.FieldOfStudy;
 import com.michaloruba.obslugasesji.entity.InformationSpecialization;
 import com.michaloruba.obslugasesji.entity.SpecKind;
-import com.michaloruba.obslugasesji.service.FieldOfStudyService;
 import com.michaloruba.obslugasesji.service.SpecKindService;
 import com.michaloruba.obslugasesji.service.SpecializationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +15,12 @@ import java.util.List;
 @RequestMapping("/specs")
 public class SpecializationController {
     private SpecializationService specializationService;
-    private FieldOfStudyService fieldOfStudyService;
     private SpecKindService specKindService;
 
 
     @Autowired
-    public SpecializationController(SpecializationService specializationService, FieldOfStudyService fieldOfStudyService, SpecKindService specKindService) {
+    public SpecializationController(SpecializationService specializationService, SpecKindService specKindService) {
         this.specializationService = specializationService;
-        this.fieldOfStudyService = fieldOfStudyService;
         this.specKindService = specKindService;
     }
 
@@ -40,21 +36,11 @@ public class SpecializationController {
 
 
 
-    @GetMapping("/showFormForSelectField")
-    public String showFormForSelectField(Model model){
-        List<FieldOfStudy> fieldOfStudies = fieldOfStudyService.findAll();
-
-        model.addAttribute("fields", fieldOfStudies);
-
-        return "specializations/specs-select-field";
-    }
-
-
 
 
     @GetMapping("/showFormForSelectSpec")
-    public String showFormForSelectSpec(@RequestParam("fieldId") int fieldId, Model model){
-        List<SpecKind> specKinds = specKindService.findByFieldOfStudy_Id(fieldId);
+    public String showFormForSelectSpec(Model model){
+        List<SpecKind> specKinds = specKindService.findAll();
 
         model.addAttribute("specKinds", specKinds);
 
@@ -68,10 +54,9 @@ public class SpecializationController {
     public String showFormForAdd(@RequestParam("specKindId") int kindId, Model model){
 
         SpecKind specKind = specKindService.findById(kindId);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> showFormForAdd: specKind -> Field of study " + specKind.getFieldOfStudy());
         InformationSpecialization specialization = new InformationSpecialization();
         specialization.setSpecKind(specKind);
-        specialization.getSpecKind().setFieldOfStudy(specKind.getFieldOfStudy());
+
 
 
         model.addAttribute("specialization", specialization);
@@ -79,11 +64,20 @@ public class SpecializationController {
         return "specializations/spec-form";
     }
 
+    @GetMapping("/showFormForUpdate")
+    public String showFormForUpdate(@RequestParam("specId") int specId, Model model){
+        InformationSpecialization specialization = specializationService.findById(specId);
+
+        model.addAttribute("specialization", specialization);
+
+        return "specializations/spec-form";
+    }
+
+
+
     @PostMapping("/saveSpec")
     public String saveSpec(@ModelAttribute("specialization") InformationSpecialization specialization){
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>> SPEC KIND NAME " + specialization.getSpecKind().getName());
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>> SPEC KIND FIELD NAME " + specialization.getSpecKind().getFieldOfStudy().getName());
 
         specializationService.save(specialization);
 

@@ -27,9 +27,6 @@ public class InformationSpecialization implements Specialization {
     private LocalDate endDate;
 
     @ManyToOne (fetch=FetchType.LAZY, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
             CascadeType.REFRESH
     })
     @JoinColumn(name = "spec_kind_id")
@@ -75,15 +72,9 @@ public class InformationSpecialization implements Specialization {
     }
 
     public void setSpecKind(SpecKind specKind){
-        setSpecKind(specKind, true);
+        this.specKind = specKind;
     }
 
-    void setSpecKind(SpecKind specKind, boolean add) {
-        this.specKind = specKind;
-        if (specKind != null && add){
-            specKind.addSpec(this, false);
-        }
-    }
 
 
 

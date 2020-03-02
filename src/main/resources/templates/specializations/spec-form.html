@@ -13,9 +13,13 @@
     <p>Save Specialization</p>
 
     <form th:action="@{/specs/saveSpec}" th:object="${specialization}" method="POST">
-        <input type="text" th:field="*{specKind.name}" class="form-control mb-4 col-4" placeholder="Name">
-        <input type="date" th:field="*{startDate}" class="form-control mb-4 col-4" placeholder="Start Date">
-        <input type="date" th:field="*{endDate}" class="form-control mb-4 col-4" placeholder="End Date">
+        <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="Name">
+        <input type="hidden" th:field="*{specKind.id}" class="form-control mb-4 col-4" placeholder="Name">
+        <label for="startDate">Start Date</label>
+        <input type="date" th:field="*{startDate}" class="form-control mb-4 col-4" id="startDate">
+        <label for="endDate">End Date</label>
+        <input type="date" th:field="*{endDate}" class="form-control mb-4 col-4" id="endDate">
+        <input type="hidden" th:field="*{specKind.fieldOfStudy.name}" class="form-control mb-4 col-4" placeholder="Field Of Study">
         <button type="submit" class="btn btn-sm btn-success col-2">Save</button>
     </form>
 
