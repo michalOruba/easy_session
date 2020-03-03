@@ -2,12 +2,16 @@ package com.michaloruba.obslugasesji.helper;
 
 
 public enum SessionStatus {
-    PASSED(false),
-    NOT_PASSED(true);
+    PASSED("Passed"),
+    NOT_PASSED("Not passed");
 
-    boolean isPassed;
+    private final String displayValue;
 
-    SessionStatus(boolean isPassed){
-        this.isPassed = isPassed;
+    SessionStatus(String status){
+        displayValue = status;
+    }
+
+    public String getDisplayValue() {
+        return displayValue;
     }
 }

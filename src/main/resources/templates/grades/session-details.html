@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Session Details</title>
+<th:block th:insert="fragments/header.html :: headerfiles"/>
+</head>
+<body>
+
+
+
+<div class="container">
+    <h2>Session Details</h2>
+    <hr>
+
+    <h3 th:text="'Student: ' + ${mySession.student.firstName} + ' ' + ${mySession.student.lastName}"></h3>
+    <h3 th:text="'Semester: ' + ${mySession.semester}"></h3>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Grade</th>
+                <th>Hours</th>
+                <th>ECTS</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="subjectGrade: ${subjectGrades}">
+                <td th:text="${subjectGrade.subject.name}"></td>
+                <td th:text="${subjectGrade.grade.getDisplayValue()}"></td>
+                <td th:text="${subjectGrade.subject.hours}"></td>
+                <td th:text="${subjectGrade.subject.ECTS}"></td>
+                <td> <a th:href="@{/grades/showFormForUpdateGrade(subjectId=${subjectGrade.id})}" class="btn btn-sm btn-warning mr-3">Update</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/sessions/list}">Back to Sessions List</a>
+
+
+
+    <div lang="en" th:replace="fragments/footer.html :: footer"> </div>
+</div>
+
+</body>
+</html>

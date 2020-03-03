@@ -1,7 +1,6 @@
 package com.michaloruba.obslugasesji.rest;
 
 import com.michaloruba.obslugasesji.entity.Student;
-import com.michaloruba.obslugasesji.service.SpecializationService;
 import com.michaloruba.obslugasesji.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +12,10 @@ import java.util.List;
 public class StudentRestController {
 
     private StudentService studentService;
-    private SpecializationService specializationService;
 
     @Autowired
-    public StudentRestController(StudentService studentService, SpecializationService specializationService) {
+    public StudentRestController(StudentService studentService) {
         this.studentService = studentService;
-        this.specializationService = specializationService;
     }
 
     @GetMapping("/students")

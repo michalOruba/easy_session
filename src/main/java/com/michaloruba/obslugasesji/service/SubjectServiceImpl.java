@@ -1,6 +1,7 @@
 package com.michaloruba.obslugasesji.service;
 
 import com.michaloruba.obslugasesji.dao.SubjectRepository;
+import com.michaloruba.obslugasesji.entity.InformationSpecialization;
 import com.michaloruba.obslugasesji.entity.Subject;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject findById(int id) {
         Optional<Subject> result = subjectRepository.findById(id);
-        Subject subject = null;
+        Subject subject;
 
         if (result.isPresent()){
             subject = result.get();
@@ -50,5 +51,10 @@ public class SubjectServiceImpl implements SubjectService {
             throw new NotFoundException("Not found Subject with ID - " + id);
         }
         subjectRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Subject> findAllBySemesterAndSpecialization(int semester, InformationSpecialization specialization) {
+        return subjectRepository.findAllBySemesterAndSpecialization(semester, specialization);
     }
 }

@@ -1,6 +1,7 @@
 package com.michaloruba.obslugasesji.service;
 
 import com.michaloruba.obslugasesji.dao.StudentRepository;
+import com.michaloruba.obslugasesji.entity.Session;
 import com.michaloruba.obslugasesji.entity.Student;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ import java.util.Optional;
 public class StudentServiceImpl implements StudentService {
 
     private StudentRepository studentRepository;
+    private SessionService sessionService;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository) {
+    public StudentServiceImpl(StudentRepository studentRepository, SessionService sessionService) {
         this.studentRepository = studentRepository;
+        this.sessionService = sessionService;
     }
 
     @Override
@@ -41,7 +44,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void save(Student student) {
-        studentRepository.save(student);
+
+        if (student.getId() == 0) {
+            studentRepository.save(student);
+            Session session = new Session(student ,student.getSemester());
+            sessionService.save(session);
+        }
+        else studentRepository.save(student);
     }
 
     @Override

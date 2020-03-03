@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subject detail</title>
+    <th:block th:insert="fragments/header.html::headerfiles"/>
+</head>
+<body>
+<div class="container">
+    <h3>Subject detail</h3>
+    <hr>
+
+    <p>Save Subject</p>
+
+    <form action="#" th:action="@{/grades/saveDetail}" th:object="${subject}" method="POST">
+        <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
+        <select class="form-control mb-4 col-4" id="status" name="status" th:field="*{grade}">
+            <option th:each="grade: ${grades}" th:text="${grade.getDisplayValue()}" th:value="${grade}"></option>
+        </select>
+        <input type="hidden" th:field="*{subject}">
+        <input type="hidden" th:field="*{session}">
+        <button type="submit" class="btn btn-success col-2">Save</button>
+    </form>
+
+    <hr>
+    <a th:href="@{/grades/showSessionDetails(sessionId=${subject.session.id})}">Back to Details List</a>
+
+</div>
+
+
+</body>
+</html>

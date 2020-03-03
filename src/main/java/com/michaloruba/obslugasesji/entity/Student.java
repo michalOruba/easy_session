@@ -16,9 +16,6 @@ public class Student {
     private String email;
     @Column(name = "semester")
     private int semester;
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-//    @JoinColumn(name = "session_id")
-//    private Session session;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "specialization_id")
@@ -28,12 +25,11 @@ public class Student {
     public Student() {
     }
 
-    public Student(String firstName, String lastName, String email, int semester, Session session, InformationSpecialization specialization) {
+    public Student(String firstName, String lastName, String email, int semester, InformationSpecialization specialization) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.semester = semester;
-//        this.session = session;
         this.specialization = specialization;
     }
 
@@ -77,15 +73,6 @@ public class Student {
         this.semester = semester;
     }
 
-//    public Session getSession() {
-//        return session;
-//    }
-//
-//    public void setSession(Session session) {
-//        this.session = session;
-//    }
-
-
     public InformationSpecialization getSpecialization() {
         return specialization;
     }
@@ -102,7 +89,6 @@ public class Student {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", semester=" + semester +
-//                ", session=" + session +
                 ", specialization=" + specialization +
                 '}';
     }

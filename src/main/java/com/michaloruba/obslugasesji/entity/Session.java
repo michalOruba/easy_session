@@ -2,17 +2,37 @@ package com.michaloruba.obslugasesji.entity;
 
 import com.michaloruba.obslugasesji.helper.SessionStatus;
 
-import java.util.Map;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "session")
 public class Session {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private SessionStatus sessionStatus;
+    @Column(name = "semester")
     private int semester;
-    private Map<Subject, Integer> subjectList;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "student_id")
     private Student student;
 
     public Session() {
         this.sessionStatus = SessionStatus.NOT_PASSED;
+    }
+
+    public Session(int semester) {
+        this();
+        this.semester = semester;
+    }
+
+    public Session(Student student, int semester){
+        this(semester);
+        this.student = student;
     }
 
     public SessionStatus getSessionStatus() {
@@ -21,22 +41,6 @@ public class Session {
 
     public void setSessionStatus(SessionStatus sessionStatus) {
         this.sessionStatus = sessionStatus;
-    }
-
-    public Map<Subject, Integer> getSubjectList() {
-        return subjectList;
-    }
-
-    public void setSubjectList(Map<Subject, Integer> subjectList) {
-        this.subjectList = subjectList;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
     }
 
     public int getId() {
@@ -55,14 +59,20 @@ public class Session {
         this.semester = semester;
     }
 
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
     @Override
     public String toString() {
         return "Session{" +
                 "id=" + id +
                 ", sessionStatus=" + sessionStatus +
-                ", semester=" + semester +
-                ", subjectList=" + subjectList +
-                ", student=" + student +
                 '}';
     }
 }

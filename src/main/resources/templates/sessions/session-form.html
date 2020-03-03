@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Session Form</title>
+    <th:block th:insert="fragments/header.html::headerfiles"/>
+</head>
+<body>
+<div class="container">
+    <h3>Session</h3>
+    <hr>
+
+    <p>Save Session</p>
+
+    <form action="#" th:action="@{/sessions/save}" th:object="${mySession}" method="POST">
+        <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
+        <input type="text" th:field="*{semester}" class="form-control mb-4 col-4" placeholder="Semester"/>
+        <select class="form-control mb-4 col-4" id="status" name="status" th:field="*{sessionStatus}">
+            <option th:each="status: ${sessionStatus}" th:text="${status.getDisplayValue()}" th:value="${status}"></option>
+        </select>
+        <select class="form-control mb-4 col-4" id="student" name="student" th:field="*{student}">
+            <option
+                    th:each="student: ${students}"
+                    th:value="${student.id}"
+                    th:text="${student.firstName} + ' ' + ${student.lastName}"
+                    th:selected="${mySession.student eq null or student.id != mySession.student.id} ? false : true">
+            </option>
+        </select>
+
+        <button type="submit" class="btn btn-success col-2">Save</button>
+    </form>
+
+    <hr>
+    <a th:href="@{/sessions/list}">Back to Sessions List</a>
+
+</div>
+
+
+</body>
+</html>
