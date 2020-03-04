@@ -7,14 +7,19 @@
 </head>
 <body>
 <div class="container">
-    <h3>Field of Study</h3>
+    <h3 class="mt-3">Field of Study</h3>
     <hr>
 
     <p>Save Field of Study</p>
 
     <form action="#" th:action="@{/fields/save}" th:object="${fieldOfStudy}" method="POST">
-        <input type="text" th:field="*{name}" class="form-control mb-4 col-4" placeholder="Field name"/>
-        <button type="submit" class="btn btn-success col-2">Save</button>
+        <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <label for="fieldName" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Field name</label>
+            <input id="fieldName" type="text" th:field="*{name}" class="form-control mb-4 col-12 col-md-4" placeholder="Field name"/>
+        </div>
+        <div class="row justify-content-center">
+            <button type="submit" class="save-button btn btn-success col-3 col-md-2">Save</button>
+        </div>
     </form>
 
     <hr>

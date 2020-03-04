@@ -7,17 +7,22 @@
 </head>
 <body>
 <div class="container">
-    <h3>Specialization</h3>
+    <h3 class="mt-3">Specialization</h3>
     <hr>
 
     <p>Select Specialization</p>
 
     <form th:action="@{/specs/showFormForAdd}" method="GET">
-        <select id="specKindId" name="specKindId">
-            <option th:each="kind: ${specKinds}" th:value="${kind.id}" th:text="${kind.name}"></option>
-        </select>
+        <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <label for="specKindId" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">First name</label>
+            <select class="form-control mb-4 col-12 col-md-4" id="specKindId" name="specKindId">
+                <option th:each="kind: ${specKinds}" th:value="${kind.id}" th:text="${kind.name}"></option>
+            </select>
+        </div>
 
-        <button type="submit" class="btn btn-sm btn-success col-2 d-block mt-3">Save</button>
+        <div class="row justify-content-center">
+            <button type="submit" class="btn btn-success col-3 col-md-2">Save</button>
+        </div>
     </form>
 
     <hr>

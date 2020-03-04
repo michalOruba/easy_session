@@ -7,27 +7,37 @@
 </head>
 <body>
 <div class="container">
-    <h3>Session</h3>
+    <h3 class="mt-3">Session</h3>
     <hr>
 
     <p>Save Session</p>
 
     <form action="#" th:action="@{/sessions/save}" th:object="${mySession}" method="POST">
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
-        <input type="text" th:field="*{semester}" class="form-control mb-4 col-4" placeholder="Semester"/>
-        <select class="form-control mb-4 col-4" id="status" name="status" th:field="*{sessionStatus}">
-            <option th:each="status: ${sessionStatus}" th:text="${status.getDisplayValue()}" th:value="${status}"></option>
-        </select>
-        <select class="form-control mb-4 col-4" id="student" name="student" th:field="*{student}">
-            <option
-                    th:each="student: ${students}"
-                    th:value="${student.id}"
-                    th:text="${student.firstName} + ' ' + ${student.lastName}"
-                    th:selected="${mySession.student eq null or student.id != mySession.student.id} ? false : true">
-            </option>
-        </select>
-
-        <button type="submit" class="btn btn-success col-2">Save</button>
+        <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <label for="semester" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Semester</label>
+            <input id="semester" type="text" th:field="*{semester}" class="form-control mb-4 col-12 col-md-4" placeholder="Semester"/>
+        </div>
+        <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <label for="status" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Status</label>
+            <select class="form-control mb-4 col-12 col-md-4" id="status" name="status" th:field="*{sessionStatus}">
+                <option th:each="status: ${sessionStatus}" th:text="${status.getDisplayValue()}" th:value="${status}"></option>
+            </select>
+        </div>
+        <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <label for="student" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Student</label>
+            <select class="form-control mb-4 col-12 col-md-4" id="student" name="student" th:field="*{student}">
+                <option
+                        th:each="student: ${students}"
+                        th:value="${student.id}"
+                        th:text="${student.firstName} + ' ' + ${student.lastName}"
+                        th:selected="${mySession.student eq null or student.id != mySession.student.id} ? false : true">
+                </option>
+            </select>
+        </div>
+        <div class="row justify-content-center">
+            <button type="submit" class="save-button btn btn-success col-3 col-md-2">Save</button>
+        </div>
     </form>
 
     <hr>

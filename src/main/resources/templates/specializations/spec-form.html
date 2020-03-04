@@ -7,20 +7,26 @@
 </head>
 <body>
 <div class="container">
-    <h3>Specialization</h3>
+    <h3 class="mt-3">Specialization</h3>
     <hr>
 
     <p>Save Specialization</p>
 
     <form th:action="@{/specs/saveSpec}" th:object="${specialization}" method="POST">
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="Name">
-        <input type="hidden" th:field="*{specKind.id}" class="form-control mb-4 col-4" placeholder="Name">
-        <label for="startDate">Start Date</label>
-        <input type="date" th:field="*{startDate}" class="form-control mb-4 col-4" id="startDate">
-        <label for="endDate">End Date</label>
-        <input type="date" th:field="*{endDate}" class="form-control mb-4 col-4" id="endDate">
+        <input id="name" type="hidden" th:field="*{specKind.id}" class="form-control mb-4 col-4" placeholder="Name">
+        <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <label for="startDate" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Start date</label>
+            <input id="startDate" type="date" th:field="*{startDate}" class="form-control mb-4 col-12 col-md-4">
+        </div>
+        <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <label for="endDate" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">End date</label>
+            <input id="endDate" type="date" th:field="*{endDate}" class="form-control mb-4 col-12 col-md-4">
+        </div>
         <input type="hidden" th:field="*{specKind.fieldOfStudy.name}" class="form-control mb-4 col-4" placeholder="Field Of Study">
-        <button type="submit" class="btn btn-sm btn-success col-2">Save</button>
+        <div class="row justify-content-center">
+            <button type="submit" class="save-button btn btn-success col-3 col-md-2">Save</button>
+        </div>
     </form>
 
     <hr>
