@@ -15,22 +15,27 @@
     <form action="#" th:action="@{/students/save}" th:object="${student}" method="POST">
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
-            <label for="firstName" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">First name</label>
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+            <label for="firstName" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">First name (*)</label>
             <input id="firstName" type="text" th:field="*{firstName}" class="form-control mb-4 col-12 col-md-4" placeholder="First name"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
             <label for="lastName" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Last name</label>
             <input id="lastName" type="text" th:field="*{lastName}" class="form-control mb-4 col-12 col-md-4" placeholder="Last name"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
             <label for="email" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Email</label>
             <input id="email" type="text" th:field="*{email}" class="form-control mb-4 col-12 col-md-4" placeholder="Email"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"></p>
             <label for="semester" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Semester</label>
             <input id="semester" type="text" th:field="*{semester}" class="form-control mb-4 col-12 col-md-4" placeholder="Semester"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}"></p>
             <label for="specId" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Specialization</label>
             <select class="form-control mb-4 col-12 col-md-4" id="specId" name="specId">
                 <option

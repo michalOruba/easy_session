@@ -1,13 +1,18 @@
 package com.michaloruba.obslugasesji.controller;
 
-import com.michaloruba.obslugasesji.dao.StudentRepository;
 import com.michaloruba.obslugasesji.entity.Student;
+import com.michaloruba.obslugasesji.rest.NotFoundException;
 import com.michaloruba.obslugasesji.service.SpecializationService;
 import com.michaloruba.obslugasesji.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/students")
@@ -15,17 +20,22 @@ public class StudentController {
 
     private StudentService studentService;
     private SpecializationService specializationService;
-    private StudentRepository studentRepository;
 
 
 
     @Autowired
-    public StudentController(StudentService studentService, SpecializationService specializationService, StudentRepository studentRepository) {
+    public StudentController(StudentService studentService, SpecializationService specializationService) {
         this.studentService = studentService;
         this.specializationService = specializationService;
-        this.studentRepository = studentRepository;
     }
 
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder){
+        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
+
+        dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
+    }
 
 
     @GetMapping("/list")
@@ -46,11 +56,24 @@ public class StudentController {
     }
 
     @PostMapping("/save")
-    public String saveStudent(@ModelAttribute Student student, @RequestParam("specId") int specId){
-        student.setSpecialization(specializationService.findById(specId));
-        studentService.save(student);
+    public String saveStudent(@Valid @ModelAttribute Student student, BindingResult bindingResult, Model model, @RequestParam("specId") int specId){
+        System.out.println(bindingResult);
+        try {
+            specializationService.findById(specId);
+        } catch (NotFoundException e){
+//            bindingResult.addError(new ObjectError("specialization", "invalid specialization (can not be null)"));
+            bindingResult.rejectValue("specialization", "error.student", "invalid specialization (can not be null)");
+        }
 
-        return "redirect:/students/list";
+        if (bindingResult.hasErrors()){
+            model.addAttribute("specs", specializationService.findAll());
+            return "/students/student-form";
+        }
+        else {
+            student.setSpecialization(specializationService.findById(specId));
+            studentService.save(student);
+            return "redirect:/students/list";
+        }
     }
 
     @GetMapping("/showFormForUpdate")
