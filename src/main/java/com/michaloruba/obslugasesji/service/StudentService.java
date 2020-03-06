@@ -9,4 +9,7 @@ public interface StudentService {
     Student findById(int id);
     void save(Student student);
     void deleteById(int id);
-}
+    List<Student> searchForStudent(String name);
+    List<Student> searchForStudent(int id);
+
+    }

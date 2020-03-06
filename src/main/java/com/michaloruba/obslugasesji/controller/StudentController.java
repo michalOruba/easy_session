@@ -1,5 +1,6 @@
 package com.michaloruba.obslugasesji.controller;
 
+import com.michaloruba.obslugasesji.dao.StudentRepository;
 import com.michaloruba.obslugasesji.entity.Student;
 import com.michaloruba.obslugasesji.service.SpecializationService;
 import com.michaloruba.obslugasesji.service.StudentService;
@@ -14,12 +15,15 @@ public class StudentController {
 
     private StudentService studentService;
     private SpecializationService specializationService;
+    private StudentRepository studentRepository;
+
 
 
     @Autowired
-    public StudentController(StudentService studentService, SpecializationService specializationService) {
+    public StudentController(StudentService studentService, SpecializationService specializationService, StudentRepository studentRepository) {
         this.studentService = studentService;
         this.specializationService = specializationService;
+        this.studentRepository = studentRepository;
     }
 
 
@@ -62,5 +66,29 @@ public class StudentController {
         studentService.deleteById(id);
 
         return "redirect:/students/list";
+    }
+
+    @PostMapping("/search")
+    public String showResultList(@RequestParam("usernameOrId") String usernameOrId,Model model) {
+
+        if (!checkIfInteger(usernameOrId)){
+            model.addAttribute("students", studentService.searchForStudent(usernameOrId));
+        }
+        else {
+            model.addAttribute("students", studentService.searchForStudent(Integer.parseInt(usernameOrId)));
+        }
+
+        model.addAttribute("input", usernameOrId);
+
+        return "/students/student-list";
+    }
+
+    private boolean checkIfInteger(String input){
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e){
+            return false;
+        }
+        return true;
     }
 }

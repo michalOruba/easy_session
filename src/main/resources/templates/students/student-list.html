@@ -15,8 +15,12 @@
     <hr>
 
     <a th:href="@{/students/showFormForAdd}" type="button" class="btn btn-sm btn-success mb-3">Add Student</a>
+    <form th:action="@{/students/search}" method="POST" class="d-flex flex-column flex-md-row">
+        <input id="usernameOrId" class="form-control d-md-inline d-block col-12 col-md-4 mr-2" type="text" name="usernameOrId"  placeholder="Type name or ID here..." th:value="${input}">
+        <button type="submit" class="btn btn-sm btn-primary col-3 col-sm-2 col-md-2 col-lg-1 align-self-center mt-3 mt-md-0">Search</button>
+    </form>
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped mt-3">
         <thead>
             <tr>
                 <th>First Name</th>
@@ -45,7 +49,8 @@
         </tbody>
     </table>
 
-
+    <hr>
+    <a th:href="@{/}">Home</a>
 
 
     <div lang="en" th:replace="fragments/footer.html :: footer"> </div>

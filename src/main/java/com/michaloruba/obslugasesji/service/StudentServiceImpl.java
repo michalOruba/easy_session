@@ -16,6 +16,7 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
     private SessionService sessionService;
 
+
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository, SessionService sessionService) {
         this.studentRepository = studentRepository;
@@ -30,7 +31,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student findById(int id) {
         Optional<Student> result = studentRepository.findById(id);
-        Student student = null;
+        Student student;
 
         if (result.isPresent()) {
             student = result.get();
@@ -60,4 +61,16 @@ public class StudentServiceImpl implements StudentService {
         }
         studentRepository.deleteById(id);
     }
+
+    @Override
+    public List<Student> searchForStudent(String name) {
+        return studentRepository.searchForStudent(name);
+    }
+
+    @Override
+    public List<Student> searchForStudent(int id) {
+        return studentRepository.searchForStudent(id);
+    }
+
+
 }
