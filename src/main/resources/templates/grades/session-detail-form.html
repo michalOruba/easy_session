@@ -15,6 +15,7 @@
     <form action="#" th:action="@{/grades/saveDetail}" th:object="${subject}" method="POST">
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}"></p>
             <label for="status" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Grade</label>
             <select class="form-control mb-4 col-12 col-md-4" id="status" name="status" th:field="*{grade}">
                 <option th:each="grade: ${grades}" th:text="${grade.getDisplayValue()}" th:value="${grade}"></option>

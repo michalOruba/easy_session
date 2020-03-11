@@ -15,16 +15,19 @@
     <form action="#" th:action="@{/sessions/save}" th:object="${mySession}" method="POST">
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}">TEST</p>
             <label for="semester" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Semester</label>
             <input id="semester" type="text" th:field="*{semester}" class="form-control mb-4 col-12 col-md-4" placeholder="Semester"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('sessionStatus')}" th:errors="*{sessionStatus}"></p>
             <label for="status" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Status</label>
             <select class="form-control mb-4 col-12 col-md-4" id="status" name="status" th:field="*{sessionStatus}">
                 <option th:each="status: ${sessionStatus}" th:text="${status.getDisplayValue()}" th:value="${status}"></option>
             </select>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('student')}" th:errors="*{student}"></p>
             <label for="student" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Student</label>
             <select class="form-control mb-4 col-12 col-md-4" id="student" name="student" th:field="*{student}">
                 <option

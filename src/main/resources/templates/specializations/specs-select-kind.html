@@ -14,7 +14,8 @@
 
     <form th:action="@{/specs/showFormForAdd}" method="GET">
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
-            <label for="specKindId" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">First name</label>
+            <p class="validationError col-12 text-center mb-0"  th:if="${message}" th:text="${message}"></p>
+            <label for="specKindId" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Name</label>
             <select class="form-control mb-4 col-12 col-md-4" id="specKindId" name="specKindId">
                 <option th:each="kind: ${specKinds}" th:value="${kind.id}" th:text="${kind.name}"></option>
             </select>

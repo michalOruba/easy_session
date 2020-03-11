@@ -1,8 +1,12 @@
 package com.michaloruba.obslugasesji.entity;
 
+import com.michaloruba.obslugasesji.helper.EnumNamePattern;
 import com.michaloruba.obslugasesji.helper.SessionStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "session")
@@ -11,9 +15,15 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @EnumNamePattern(regexp = "PASSED|NOT_PASSED", message = "wrong status")
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private SessionStatus sessionStatus;
+
+    @NotNull(message = "this field is required")
+    @Min(value = 1, message = "must be greater then or equal 1")
+    @Max(value = 7, message = "must be less then or equal 7")
     @Column(name = "semester")
     private int semester;
 
@@ -40,7 +50,7 @@ public class Session {
     }
 
     public void setSessionStatus(SessionStatus sessionStatus) {
-        this.sessionStatus = sessionStatus;
+       this.sessionStatus = sessionStatus;
     }
 
     public int getId() {
@@ -73,6 +83,8 @@ public class Session {
         return "Session{" +
                 "id=" + id +
                 ", sessionStatus=" + sessionStatus +
+                ", semester=" + semester +
+                ", student=" + student +
                 '}';
     }
 }

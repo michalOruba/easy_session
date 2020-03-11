@@ -13,7 +13,7 @@
     <p>Save Student</p>
 
     <form action="#" th:action="@{/students/save}" th:object="${student}" method="POST">
-        <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="First name"/>
+        <input type="hidden" th:field="*{id}"/>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
             <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
             <label for="firstName" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">First name (*)</label>

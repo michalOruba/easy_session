@@ -13,7 +13,9 @@
     <p>Save Field of Study</p>
 
     <form action="#" th:action="@{/fields/save}" th:object="${fieldOfStudy}" method="POST">
+        <input type="hidden" th:field="*{id}">
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">TEST</p>
             <label for="fieldName" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Field name</label>
             <input id="fieldName" type="text" th:field="*{name}" class="form-control mb-4 col-12 col-md-4" placeholder="Field name"/>
         </div>

@@ -3,6 +3,8 @@ package com.michaloruba.obslugasesji.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -19,9 +21,14 @@ public class InformationSpecialization implements Specialization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @NotNull(message = "this field is required")
     @Column (name = "start_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+
+    @NotNull(message = "this field is required")
+    @FutureOrPresent(message = "date have to be equal or greater than today")
     @Column (name = "end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;

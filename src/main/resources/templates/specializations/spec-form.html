@@ -16,10 +16,12 @@
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="Name">
         <input id="name" type="hidden" th:field="*{specKind.id}" class="form-control mb-4 col-4" placeholder="Name">
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></p>
             <label for="startDate" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Start date</label>
             <input id="startDate" type="date" th:field="*{startDate}" class="form-control mb-4 col-12 col-md-4">
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></p>
             <label for="endDate" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">End date</label>
             <input id="endDate" type="date" th:field="*{endDate}" class="form-control mb-4 col-12 col-md-4">
         </div>

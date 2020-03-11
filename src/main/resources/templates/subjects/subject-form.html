@@ -15,22 +15,27 @@
     <form action="#" th:action="@{/subjects/save}" th:object="${subject}" method="POST">
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4"/>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
             <label for="name" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Name</label>
             <input id="name" type="text" th:field="*{name}" class="form-control mb-4 col-12 col-md-4" placeholder="Name"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('hours')}" th:errors="*{hours}"></p>
             <label for="hours" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Hours</label>
             <input id="hours" type="text" th:field="*{hours}" class="form-control mb-4 col-12 col-md-4" placeholder="Hours"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('ECTS')}" th:errors="*{ECTS}"></p>
             <label for="ects" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">ECTS</label>
             <input id="ects" type="text" th:field="*{ECTS}" class="form-control mb-4 col-12 col-md-4" placeholder="ECTS"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"></p>
             <label for="semester" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Semester</label>
             <input id="semester" type="text" th:field="*{semester}" class="form-control mb-4 col-12 col-md-4" placeholder="Semester"/>
         </div>
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">
+            <p class="validationError col-12 text-center mb-0" th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}"></p>
             <label for="specId" class="mb-1 mb-md-4 mx-2 col-12 col-md-2">Specialization</label>
             <select class="form-control mb-4 col-12 col-md-4" id="specId" name="specId" th:field="*{specialization}">
                 <option

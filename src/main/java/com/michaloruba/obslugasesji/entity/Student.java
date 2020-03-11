@@ -31,7 +31,6 @@ public class Student {
     @Column(name = "semester")
     private int semester;
 
-//    @NotNull(message = "invalid specialization (can not be null)")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "specialization_id")
     private InformationSpecialization specialization;

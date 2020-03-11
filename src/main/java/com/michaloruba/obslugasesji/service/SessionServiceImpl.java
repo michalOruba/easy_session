@@ -4,6 +4,7 @@ import com.michaloruba.obslugasesji.dao.SessionRepository;
 import com.michaloruba.obslugasesji.entity.Session;
 import com.michaloruba.obslugasesji.entity.Subject;
 import com.michaloruba.obslugasesji.entity.SubjectGrade;
+import com.michaloruba.obslugasesji.helper.SubjectGradeTypes;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class SessionServiceImpl implements SessionService {
 
             subjects.
                     forEach(subject -> {
-                        SubjectGrade subjectGrade = new SubjectGrade(com.michaloruba.obslugasesji.helper.SubjectGrade.NONE, subject, session);
+                        SubjectGrade subjectGrade = new SubjectGrade(SubjectGradeTypes.NONE, subject, session);
                         subjectGradeService.save(subjectGrade);
                     });
         }

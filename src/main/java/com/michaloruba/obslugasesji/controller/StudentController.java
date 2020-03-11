@@ -57,20 +57,21 @@ public class StudentController {
 
     @PostMapping("/save")
     public String saveStudent(@Valid @ModelAttribute Student student, BindingResult bindingResult, Model model, @RequestParam("specId") int specId){
-        System.out.println(bindingResult);
         try {
             specializationService.findById(specId);
         } catch (NotFoundException e){
-//            bindingResult.addError(new ObjectError("specialization", "invalid specialization (can not be null)"));
+            System.out.println(e.getMessage());
             bindingResult.rejectValue("specialization", "error.student", "invalid specialization (can not be null)");
         }
 
+        student.setSpecialization(specializationService.findById(specId));
+
         if (bindingResult.hasErrors()){
             model.addAttribute("specs", specializationService.findAll());
+
             return "/students/student-form";
         }
         else {
-            student.setSpecialization(specializationService.findById(specId));
             studentService.save(student);
             return "redirect:/students/list";
         }

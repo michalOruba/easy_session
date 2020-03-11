@@ -1,12 +1,16 @@
 package com.michaloruba.obslugasesji.controller;
 
 import com.michaloruba.obslugasesji.entity.SubjectGrade;
+import com.michaloruba.obslugasesji.helper.SubjectGradeTypes;
 import com.michaloruba.obslugasesji.service.SessionService;
 import com.michaloruba.obslugasesji.service.SubjectGradeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/grades")
@@ -31,12 +35,17 @@ public class SubjectGradeController {
     @GetMapping("/showFormForUpdateGrade")
     public String showFormForUpdateGrade(@RequestParam("subjectId") int subjectId, Model model){
         model.addAttribute("subject", subjectGradeService.findById(subjectId));
-        model.addAttribute("grades", com.michaloruba.obslugasesji.helper.SubjectGrade.values());
+        model.addAttribute("grades", SubjectGradeTypes.values());
         return "/grades/session-detail-form";
     }
 
     @PostMapping("/saveDetail")
-    public String saveDetail(@ModelAttribute SubjectGrade subjectGrade, RedirectAttributes attributes){
+    public String saveDetail(@Valid @ModelAttribute("subject") SubjectGrade subjectGrade, BindingResult bindingResult, RedirectAttributes attributes, Model model){
+        if (bindingResult.hasErrors()){
+            System.out.println(bindingResult.toString());
+            model.addAttribute("grades", SubjectGradeTypes.values());
+            return "/grades/session-detail-form";
+        }
         subjectGradeService.save(subjectGrade);
 
         attributes.addAttribute("sessionId", subjectGrade.getSession().getId());

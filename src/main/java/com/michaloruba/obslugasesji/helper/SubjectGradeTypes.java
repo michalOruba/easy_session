@@ -1,6 +1,6 @@
 package com.michaloruba.obslugasesji.helper;
 
-public enum SubjectGrade {
+public enum SubjectGradeTypes {
     NONE (Constants.NONE),
     TWO (Constants.TWO),
     THREE (Constants.THREE),
@@ -11,7 +11,7 @@ public enum SubjectGrade {
 
     private final double displayValue;
 
-    SubjectGrade(double grade) {
+    SubjectGradeTypes(double grade) {
         this.displayValue = grade;
     }
 

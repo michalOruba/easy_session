@@ -1,6 +1,8 @@
 package com.michaloruba.obslugasesji.entity;
 
 
+import com.michaloruba.obslugasesji.helper.SubjectGradeTypes;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,7 +14,7 @@ public class SubjectGrade {
 
     @Column(name = "grade")
     @Enumerated(EnumType.STRING)
-    private com.michaloruba.obslugasesji.helper.SubjectGrade grade;
+    private SubjectGradeTypes grade;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "subject_id")
@@ -27,11 +29,11 @@ public class SubjectGrade {
     public SubjectGrade() {
     }
 
-    public SubjectGrade(com.michaloruba.obslugasesji.helper.SubjectGrade grade) {
+    public SubjectGrade(SubjectGradeTypes grade) {
         this.grade = grade;
     }
 
-    public SubjectGrade(com.michaloruba.obslugasesji.helper.SubjectGrade grade, Subject subject, Session session){
+    public SubjectGrade(SubjectGradeTypes grade, Subject subject, Session session){
         this(grade);
         this.subject = subject;
         this.session = session;
@@ -45,11 +47,11 @@ public class SubjectGrade {
         this.id = id;
     }
 
-    public com.michaloruba.obslugasesji.helper.SubjectGrade getGrade() {
+    public SubjectGradeTypes getGrade() {
         return grade;
     }
 
-    public void setGrade(com.michaloruba.obslugasesji.helper.SubjectGrade grade) {
+    public void setGrade(SubjectGradeTypes grade) {
         this.grade = grade;
     }
 

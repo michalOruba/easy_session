@@ -1,6 +1,9 @@
 package com.michaloruba.obslugasesji.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "subject")
@@ -9,14 +12,27 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @NotNull(message = "this field is required")
     @Column(name = "name")
     private String name;
+
+    @NotNull(message = "this field is required")
+    @Min(value = 1, message = "must be greater or equal 1")
     @Column(name = "hours")
     private double hours;
+
+    @NotNull(message = "this field is required")
+    @Min(value = 1, message = "must be greater or equal 1")
     @Column(name = "ECTS")
     private int ECTS;
+
+    @NotNull(message = "this field is required")
+    @Min(value = 1, message = "must be greater or equal 1")
+    @Max(value = 7, message = "must be less or equal 7")
     @Column(name = "semester")
     private int semester;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "specialization_id")
     private InformationSpecialization specialization;

@@ -1,6 +1,7 @@
 package com.michaloruba.obslugasesji.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -15,6 +16,8 @@ public class FieldOfStudy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @NotNull(message = "this field is required")
     @Column(name = "name")
     private String name;
 
