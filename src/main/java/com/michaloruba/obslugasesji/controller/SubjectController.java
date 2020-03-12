@@ -4,6 +4,8 @@ import com.michaloruba.obslugasesji.entity.Subject;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import com.michaloruba.obslugasesji.service.SpecializationService;
 import com.michaloruba.obslugasesji.service.SubjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 public class SubjectController {
     private SubjectService subjectService;
     private SpecializationService specializationService;
+    private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     @Autowired
     public SubjectController(SubjectService subjectService, SpecializationService specializationService) {
@@ -50,12 +53,11 @@ public class SubjectController {
 
     @PostMapping("/save")
     public String saveSubject(@Valid @ModelAttribute Subject subject, BindingResult bindingResult, Model model){
-        System.out.println(bindingResult.toString());
         try {
             if(subject.getSpecialization() == null) throw new NotFoundException("Specialization not found");
             specializationService.findById(subject.getSpecialization().getId());
         } catch (NotFoundException e){
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             bindingResult.rejectValue("specialization", "error.subject", "invalid specialization (can not be null)");
         }
 

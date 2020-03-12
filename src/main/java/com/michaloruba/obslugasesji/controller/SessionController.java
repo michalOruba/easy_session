@@ -60,8 +60,6 @@ public class SessionController {
         }
 
         if (bindingResult.hasErrors()){
-            System.out.println(bindingResult.toString());
-
             model.addAttribute("students", studentService.findAll());
             model.addAttribute("sessionStatus", SessionStatus.values());
             return "/sessions/session-form";

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Easy Session App - Access Denied</title>
+	<th:block th:insert="fragments/header.html::headerfiles"/>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="error-template">
+				<h1 class="text-center">
+					Oops!</h1>
+				<h2 class="text-center">
+					Access Denied</h2>
+				<div class="error-details text-center">
+					Access Denied - You are not authorized to access this resource.
+				</div>
+				<div class="error-actions row justify-content-center">
+					<a th:href="@{/}" class="btn btn-primary btn-lg"><i class="fas fa-home"></i>
+						Take Me Home </a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="/fragments/footer.html :: footer"> </div>
+</div>
+</body>
+</html>

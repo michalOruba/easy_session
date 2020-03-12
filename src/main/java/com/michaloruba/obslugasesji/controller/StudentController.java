@@ -4,6 +4,8 @@ import com.michaloruba.obslugasesji.entity.Student;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import com.michaloruba.obslugasesji.service.SpecializationService;
 import com.michaloruba.obslugasesji.service.StudentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ public class StudentController {
 
     private StudentService studentService;
     private SpecializationService specializationService;
+    private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
 
 
@@ -60,7 +63,7 @@ public class StudentController {
         try {
             specializationService.findById(specId);
         } catch (NotFoundException e){
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             bindingResult.rejectValue("specialization", "error.student", "invalid specialization (can not be null)");
         }
 

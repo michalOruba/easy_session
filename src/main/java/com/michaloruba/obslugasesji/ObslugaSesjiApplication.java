@@ -20,9 +20,7 @@ public class ObslugaSesjiApplication {
 //		student.setSubjectList(student.getSpecialization().getSubjectList());
 //
 //
-//		System.out.println(student);
 //
-//		System.out.println(student.getSession().getSessionStatus());
 
 	}
 

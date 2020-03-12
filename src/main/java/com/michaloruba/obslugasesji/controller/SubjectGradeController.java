@@ -4,6 +4,8 @@ import com.michaloruba.obslugasesji.entity.SubjectGrade;
 import com.michaloruba.obslugasesji.helper.SubjectGradeTypes;
 import com.michaloruba.obslugasesji.service.SessionService;
 import com.michaloruba.obslugasesji.service.SubjectGradeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,7 @@ public class SubjectGradeController {
 
     private SessionService sessionService;
     private SubjectGradeService subjectGradeService;
+    private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     public SubjectGradeController(SessionService sessionService, SubjectGradeService subjectGradeService) {
         this.sessionService = sessionService;
@@ -42,7 +45,7 @@ public class SubjectGradeController {
     @PostMapping("/saveDetail")
     public String saveDetail(@Valid @ModelAttribute("subject") SubjectGrade subjectGrade, BindingResult bindingResult, RedirectAttributes attributes, Model model){
         if (bindingResult.hasErrors()){
-            System.out.println(bindingResult.toString());
+            logger.warn(bindingResult.toString());
             model.addAttribute("grades", SubjectGradeTypes.values());
             return "/grades/session-detail-form";
         }
