@@ -34,7 +34,7 @@ public class SubjectController {
     }
 
     @GetMapping("/list")
-    public String findAllSubjects(Model model){
+    public String showListOfSubjects(Model model){
         model.addAttribute("subjects", subjectService.findAll());
 
         return "/subjects/subjects-list";

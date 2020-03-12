@@ -34,7 +34,7 @@ public class FieldOfStudyController {
     }
 
     @GetMapping("/list")
-    public String getFieldsOfStudy(Model model){
+    public String showListOfFields(Model model){
         List<FieldOfStudy> fields =  fieldOfStudyService.findAll();
         model.addAttribute("fields", fields);
 

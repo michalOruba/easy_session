@@ -39,7 +39,7 @@ public class StudentController {
 
 
     @GetMapping("/list")
-    public String showStudentList(Model model){
+    public String showListOfStudents(Model model){
         model.addAttribute("students", studentService.findAll());
         return "/students/student-list";
     }

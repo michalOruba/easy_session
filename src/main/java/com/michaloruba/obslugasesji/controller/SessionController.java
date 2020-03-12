@@ -33,7 +33,7 @@ public class SessionController {
     }
 
     @GetMapping("/list")
-    public String showSessionList(Model model){
+    public String showListOfSessions(Model model){
         model.addAttribute("mySessions", sessionService.findAll());
 
         return "/sessions/session-list";

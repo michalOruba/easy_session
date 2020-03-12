@@ -28,18 +28,13 @@ public class SpecializationController {
     }
 
     @GetMapping("/list")
-    public String viewSpecs(Model model){
+    public String showListOfSpecs(Model model){
         List<InformationSpecialization> specializations = specializationService.findAll();
 
         model.addAttribute("specializations", specializations);
 
         return "specializations/specs-list";
     }
-
-
-
-
-
 
     @GetMapping("/showFormForSelectSpec")
     public String showFormForSelectSpec(Model model){
@@ -49,9 +44,6 @@ public class SpecializationController {
 
         return "/specializations/specs-select-kind";
     }
-
-
-
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(@RequestParam("specKindId") int kindId, Model model){
@@ -68,9 +60,6 @@ public class SpecializationController {
             model.addAttribute("specKinds", specKinds);
             return "/specializations/specs-select-kind";
         }
-
-
-
         return "/specializations/spec-form";
     }
 
@@ -83,7 +72,6 @@ public class SpecializationController {
         } catch (NotFoundException e ){
             return "redirect:/specs/list";
         }
-
         return "/specializations/spec-form";
     }
 
