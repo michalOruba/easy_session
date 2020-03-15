@@ -36,8 +36,8 @@ public class SubjectGradeController {
     }
 
     @GetMapping("/showFormForUpdateGrade")
-    public String showFormForUpdateGrade(@RequestParam("subjectId") int subjectId, Model model){
-        model.addAttribute("subject", subjectGradeService.findById(subjectId));
+    public String showFormForUpdateGrade(@RequestParam("subjectGradeId") int subjectGradeId, Model model){
+        model.addAttribute("subject", subjectGradeService.findById(subjectGradeId));
         model.addAttribute("grades", SubjectGradeTypes.values());
         return "/grades/session-detail-form";
     }

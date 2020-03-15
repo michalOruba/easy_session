@@ -38,3 +38,7 @@ mvnw.cmd
 
 ### application.properties
 src/main/resources/application.properties
+
+### logs
+
+logs

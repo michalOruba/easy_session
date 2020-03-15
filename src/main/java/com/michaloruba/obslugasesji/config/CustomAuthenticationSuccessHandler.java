@@ -26,6 +26,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		String userName = authentication.getName();
 
 		User theUser = userService.findByUserName(userName);
+
 		
 		// now place in the session
 		HttpSession session = request.getSession();

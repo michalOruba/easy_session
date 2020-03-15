@@ -4,6 +4,9 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 
@@ -69,7 +72,12 @@ public class LoggingAspect {
 
 
     private void logBasicData(JoinPoint joinPoint, String adviceType){
-        logger.info("{}: The method called is: {}", adviceType, joinPoint.getSignature().toShortString());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            currentUserName = authentication.getName();
+        }
+        logger.info("{}: The method called is: {}, User calling method: {}", adviceType, joinPoint.getSignature().toShortString(), currentUserName);
     }
 
     private void logArguments(JoinPoint joinPoint){

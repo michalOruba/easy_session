@@ -69,4 +69,9 @@ public class SessionServiceImpl implements SessionService {
             throw new NotFoundException("Not found session with id - " + id);
         }
     }
+
+    @Override
+    public Session findByStudentIdAndSemester(int studentId, int semester) {
+        return sessionRepository.findByStudentIdAndSemester(studentId, semester);
+    }
 }

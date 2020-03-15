@@ -9,4 +9,5 @@ public interface SessionService {
     Session findById(int id);
     void save(Session session);
     void deleteById(int id);
+    Session findByStudentIdAndSemester(int studentId, int semester);
 }

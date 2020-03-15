@@ -1,7 +1,9 @@
 package com.michaloruba.obslugasesji.controller;
 
+import com.michaloruba.obslugasesji.entity.Session;
 import com.michaloruba.obslugasesji.entity.Student;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
+import com.michaloruba.obslugasesji.service.SessionService;
 import com.michaloruba.obslugasesji.service.SpecializationService;
 import com.michaloruba.obslugasesji.service.StudentService;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -22,14 +25,16 @@ public class StudentController {
 
     private StudentService studentService;
     private SpecializationService specializationService;
+    private SessionService sessionService;
     private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
 
 
     @Autowired
-    public StudentController(StudentService studentService, SpecializationService specializationService) {
+    public StudentController(StudentService studentService, SpecializationService specializationService, SessionService sessionService) {
         this.studentService = studentService;
         this.specializationService = specializationService;
+        this.sessionService = sessionService;
     }
 
 
@@ -117,5 +122,22 @@ public class StudentController {
             return false;
         }
         return true;
+    }
+
+    @GetMapping("/showSessionDetails")
+    public String showSessionDetails(@RequestParam("studentId") int studentId, RedirectAttributes attributes, Model model){
+        Student student = studentService.findById(studentId);
+        Session session = sessionService.findByStudentIdAndSemester(student.getId(), student.getSemester());
+
+        if(session == null){
+            model.addAttribute("errorMessage", "Sorry, no active session was found for this Student");
+            model.addAttribute("students", studentService.findAll());
+
+            return "/students/student-list";
+        }
+
+        attributes.addAttribute("sessionId", session.getId());
+
+        return "redirect:/grades/showSessionDetails";
     }
 }

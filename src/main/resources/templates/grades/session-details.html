@@ -32,7 +32,7 @@
                 <td th:text="${subjectGrade.grade.getDisplayValue()}"></td>
                 <td th:text="${subjectGrade.subject.hours}"></td>
                 <td th:text="${subjectGrade.subject.ECTS}"></td>
-                <td> <a th:href="@{/grades/showFormForUpdateGrade(subjectId=${subjectGrade.id})}" class="btn btn-sm btn-warning mr-3">Update</a>
+                <td> <a th:href="@{/grades/showFormForUpdateGrade(subjectGradeId=${subjectGrade.id})}" class="btn btn-sm btn-warning mr-3">Update</a>
                 </td>
             </tr>
         </tbody>
