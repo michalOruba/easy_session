@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Session Details</title>
@@ -23,7 +23,7 @@
                 <th>Grade</th>
                 <th>Hours</th>
                 <th>ECTS</th>
-                <th>Action</th>
+                <th sec:authorize="hasAnyAuthority('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_EMPLOYEE')">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -32,7 +32,8 @@
                 <td th:text="${subjectGrade.grade.getDisplayValue()}"></td>
                 <td th:text="${subjectGrade.subject.hours}"></td>
                 <td th:text="${subjectGrade.subject.ECTS}"></td>
-                <td> <a th:href="@{/grades/showFormForUpdateGrade(subjectGradeId=${subjectGrade.id})}" class="btn btn-sm btn-warning mr-3">Update</a>
+                <td sec:authorize="hasAnyAuthority('ROLE_OWNER', 'ROLE_ADMIN', 'ROLE_EMPLOYEE')">
+                    <a th:href="@{/grades/showFormForUpdateGrade(subjectGradeId=${subjectGrade.id})}" class="btn btn-sm btn-warning mr-3">Update</a>
                 </td>
             </tr>
         </tbody>
