@@ -1,5 +1,6 @@
 package com.michaloruba.obslugasesji.aop;
 
+import com.michaloruba.obslugasesji.user.CrmUser;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +35,9 @@ public class SecurityAspect {
     @Pointcut("forAuthFailureHandler() || forAuthSuccessHandler() || forCustomAuthSuccessHandler() || forLogoutSuccessHandler()")
     private void forLoginFlow(){}
 
+    @Pointcut("execution(* com.michaloruba.obslugasesji.controller.RegistrationController.processRegistrationForm(..))")
+    private void forUserRegistration(){}
+
     @Before("forLoginFlow()")
     public void checkLoginProcess(JoinPoint joinPoint){
         logger.info("METHOD_SIGNATURE " + joinPoint.getSignature().toShortString());
@@ -53,5 +59,26 @@ public class SecurityAspect {
                         );
             }
         }
+    }
+
+    @Before("forUserRegistration()")
+    public void checkRegistrationProcess(JoinPoint joinPoint){
+        logger.info("METHOD_SIGNATURE " + joinPoint.getSignature().toShortString());
+
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest();
+
+        Object [] args = joinPoint.getArgs();
+
+        for (Object arg : args) {
+
+            if (arg instanceof CrmUser) {
+                CrmUser user = (CrmUser) arg;
+
+                logger.info("Registered UserName: {}, request IP address: {}, Requested URI: {}, Requested URL: {}", user.getUserName(), request.getRemoteAddr(), request.getRequestURI(), request.getRequestURL());
+            }
+        }
+
+
     }
 }
