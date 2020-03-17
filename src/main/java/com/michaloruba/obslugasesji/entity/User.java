@@ -1,6 +1,10 @@
 package com.michaloruba.obslugasesji.entity;
 
+import com.michaloruba.obslugasesji.validation.ValidEmail;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 @Entity
@@ -10,7 +14,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long id;
+	private int id;
 
 	@Column(name = "username")
 	private String userName;
@@ -18,16 +22,28 @@ public class User {
 	@Column(name = "password")
 	private String password;
 
+	@NotNull(message = "is required")
+	@Size(min = 1, message = "is required")
 	@Column(name = "first_name")
 	private String firstName;
 
+	@NotNull(message = "is required")
+	@Size(min = 1, message = "is required")
 	@Column(name = "last_name")
 	private String lastName;
 
+	@ValidEmail
+	@NotNull(message = "is required")
+	@Size(min = 1, message = "is required")
 	@Column(name = "email")
 	private String email;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {
+			CascadeType.DETACH,
+			CascadeType.PERSIST,
+			CascadeType.MERGE,
+			CascadeType.REFRESH
+	})
 	@JoinTable(name = "users_roles",
 	joinColumns = @JoinColumn(name = "user_id"),
 	inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -54,11 +70,11 @@ public class User {
 		this.roles = roles;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

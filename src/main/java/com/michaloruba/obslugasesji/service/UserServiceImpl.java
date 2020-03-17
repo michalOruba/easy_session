@@ -1,7 +1,7 @@
 package com.michaloruba.obslugasesji.service;
 
-import com.michaloruba.obslugasesji.dao.RoleDao;
-import com.michaloruba.obslugasesji.dao.UserDao;
+import com.michaloruba.obslugasesji.dao.RoleRepository;
+import com.michaloruba.obslugasesji.dao.UserRepository;
 import com.michaloruba.obslugasesji.entity.Role;
 import com.michaloruba.obslugasesji.entity.User;
 import com.michaloruba.obslugasesji.user.CrmUser;
@@ -16,50 +16,85 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-	// need to inject user dao
-	@Autowired
-	private UserDao userDao;
 
+	/**
+	 * Field injection was used to prevent circular bean dependency
+	 */
 	@Autowired
-	private RoleDao roleDao;
-	
+	private UserRepository userRepository;
+	@Autowired
+	private RoleRepository roleRepository;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+
+
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
 
 	@Override
 	@Transactional
 	public User findByUserName(String userName) {
-		// check the database if the user already exists
-		return userDao.findByUserName(userName);
+
+		return userRepository.findByUserName(userName);
 	}
 
 	@Override
 	@Transactional
 	public void save(CrmUser crmUser) {
 		User user = new User();
-		 // assign user details to the user object
+
 		user.setUserName(crmUser.getUserName());
 		user.setPassword(passwordEncoder.encode(crmUser.getPassword()));
 		user.setFirstName(crmUser.getFirstName());
 		user.setLastName(crmUser.getLastName());
 		user.setEmail(crmUser.getEmail());
 
-		// give user default role of "employee"
-		user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_EMPLOYEE")));
+		user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_EMPLOYEE")));
 
-		 // save user in the database
-		userDao.save(user);
+		userRepository.save(user);
+	}
+
+	@Override
+	@Transactional
+	public void deleteByUserName(String userName) throws UsernameNotFoundException {
+		userRepository.deleteByUserName(userName);
+	}
+
+	@Override
+	@Transactional
+	public void update(User user) {
+		User userToSave = findByUserName(user.getUserName());
+
+		userToSave.setFirstName(user.getFirstName());
+		userToSave.setLastName(user.getLastName());
+		userToSave.setEmail(user.getEmail());
+
+		userRepository.save(userToSave);
+
+	}
+
+	@Override
+	@Transactional
+	public void updateRoles(User user) {
+		User userToSave = findByUserName(user.getUserName());
+
+		userToSave.setRoles(user.getRoles());
+
+		userRepository.save(userToSave);
 	}
 
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userDao.findByUserName(userName);
+		User user = userRepository.findByUserName(userName);
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}

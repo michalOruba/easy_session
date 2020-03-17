@@ -16,15 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //@Autowired
     private UserService userService;
-
-    //@Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
-    //@Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     @Autowired
@@ -46,16 +40,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/register/*").permitAll()
-                .antMatchers("/").hasAnyRole("STUDENT", "ADMIN", "EMPLOYEE", "OWNER")
-                .antMatchers("/*/list").hasAnyRole("STUDENT", "ADMIN", "EMPLOYEE", "OWNER")
-                .antMatchers("/*/showSessionDetails").hasAnyRole("STUDENT", "ADMIN", "EMPLOYEE", "OWNER")
+                .antMatchers("/").authenticated()
+                .antMatchers("/*/list").authenticated()
+                .antMatchers("/*/showSessionDetails").authenticated()
                 .antMatchers("/grades/save*").hasAnyRole("ADMIN", "OWNER", "EMPLOYEE")
                 .antMatchers("/grades/show*").hasAnyRole("ADMIN", "OWNER", "EMPLOYEE")
                 .antMatchers("/*/show*").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers("/*/save*").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers("/*/delete*").hasAnyRole("ADMIN", "OWNER")
-                .antMatchers("/students/search").hasAnyRole("STUDENT", "ADMIN", "EMPLOYEE", "OWNER")
-                .antMatchers( HttpMethod.GET, "/api/*").hasAnyRole("STUDENT", "ADMIN", "EMPLOYEE", "OWNER")
+                .antMatchers("/students/search").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/admin/*/list").hasRole("OWNER")
+                .antMatchers("/admin/users/showFormForUpdateRoles").hasRole("OWNER")
+                .antMatchers( HttpMethod.GET, "/api/*").authenticated()
                 .antMatchers( HttpMethod.POST, "/api/*").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers( HttpMethod.PUT, "/api/*").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers( HttpMethod.DELETE, "/api/*").hasAnyRole("ADMIN", "OWNER")

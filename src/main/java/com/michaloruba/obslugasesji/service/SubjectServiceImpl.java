@@ -5,6 +5,8 @@ import com.michaloruba.obslugasesji.entity.InformationSpecialization;
 import com.michaloruba.obslugasesji.entity.Subject;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,5 +58,10 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public List<Subject> findAllBySemesterAndSpecialization(int semester, InformationSpecialization specialization) {
         return subjectRepository.findAllBySemesterAndSpecialization(semester, specialization);
+    }
+
+    @Override
+    public Page<Subject> findByName(String name, Pageable pageable) {
+        return subjectRepository.findByName(name, pageable);
     }
 }

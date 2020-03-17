@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class InformationTechnology extends FieldOfStudy {
     private boolean hasComputers;
 
-    public boolean isHasComputers() {
+    public boolean hasComputers() {
         return hasComputers;
     }
 

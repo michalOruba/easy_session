@@ -7,22 +7,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
-public class UserDaoImpl implements UserDao {
+public class UserRepositoryImpl implements UserRepository {
+
+	private EntityManager entityManager;
 
 	@Autowired
-	private EntityManager entityManager;
+	public UserRepositoryImpl(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+
+	@Override
+	public List<User> findAll() {
+		Session session = entityManager.unwrap(Session.class);
+		Query<User> theQuery = session.createQuery("from User", User.class);
+
+		return theQuery.getResultList();
+	}
 
 	@Override
 	public User findByUserName(String theUserName) {
-		// get the current hibernate session
 		Session currentSession = entityManager.unwrap(Session.class);
 
-		// now retrieve/read from database using username
 		Query<User> theQuery = currentSession.createQuery("from User where userName=:uName", User.class);
 		theQuery.setParameter("uName", theUserName);
-		User theUser = null;
+		User theUser;
 		try {
 			theUser = theQuery.getSingleResult();
 		} catch (Exception e) {
@@ -37,8 +48,13 @@ public class UserDaoImpl implements UserDao {
 		// get current hibernate session
 		Session currentSession = entityManager.unwrap(Session.class);
 
-		// create the user ... finally LOL
 		currentSession.saveOrUpdate(theUser);
+	}
+
+	@Override
+	public void deleteByUserName(String userName) {
+		Session session = entityManager.unwrap(Session.class);
+		session.delete(findByUserName(userName));
 	}
 
 }

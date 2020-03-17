@@ -88,4 +88,15 @@ public class CrmUser {
 		this.email = email;
 	}
 
+	@Override
+	public String toString() {
+		return "CrmUser{" +
+				"userName='" + userName + '\'' +
+				", password='" + password + '\'' +
+				", matchingPassword='" + matchingPassword + '\'' +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", email='" + email + '\'' +
+				'}';
+	}
 }

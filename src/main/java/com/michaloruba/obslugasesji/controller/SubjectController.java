@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +18,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/subjects")
@@ -37,8 +44,20 @@ public class SubjectController {
     }
 
     @GetMapping("/list")
-    public String showListOfSubjects(Model model){
-        model.addAttribute("subjects", subjectService.findAll());
+    public String showListOfSubjects(@RequestParam("name") Optional<String> name, @RequestParam("page") Optional<Integer> page, Model model){
+        int currentPage = page.orElse(1);
+        Page<Subject> subjectPage = subjectService.findByName(name.orElse("_"), PageRequest.of(currentPage - 1, 10, Sort.Direction.ASC, "semester", "name"));
+
+        model.addAttribute("subjects", subjectPage);
+
+        int totalPages = subjectPage.getTotalPages();
+        if (totalPages > 0){
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
 
         return "/subjects/subjects-list";
     }

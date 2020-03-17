@@ -8,5 +8,4 @@ public interface SpecKindService {
     List<SpecKind> findAll();
 
     SpecKind findById(int kindId);
-    List<SpecKind>  findByFieldOfStudy_Id(int id);
 }

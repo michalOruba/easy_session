@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roles List</title>
+<th:block th:insert="fragments/header.html :: headerfiles"/>
+</head>
+<body>
+
+
+
+<div class="container">
+    <h2>Roles List</h2>
+
+    <hr>
+
+    <a
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            th:href="@{/admin/roles/showFormForAdd}"
+            type="button"
+            class="btn btn-sm btn-success mb-3">
+        Add Role
+    </a>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th sec:authorize="hasAuthority('ROLE_ADMIN')">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="role: ${roles}">
+                <td th:text="${role.id}"></td>
+                <td th:text="${role.name}"></td>
+                <td sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a th:href="@{/admin/roles/showFormForUpdate(roleId=${role.id})}" class="btn btn-sm btn-warning"
+                    >Update</a>
+                    <a th:href="@{/admin/roles/delete(roleId=${role.id})}" class="btn btn-sm btn-danger"
+                    onclick="if (! (confirm('Are you sure you want to delete this User?'))) return false;"
+                    >Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <a th:href="@{/}">Home</a>
+
+
+    <div lang="en" th:replace="fragments/footer.html :: footer"> </div>
+</div>
+
+</body>
+</html>

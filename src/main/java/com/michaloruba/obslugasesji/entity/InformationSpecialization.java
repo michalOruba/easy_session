@@ -16,7 +16,7 @@ import java.time.LocalDate;
         columnDefinition = "int(2)"
 )
 @DiscriminatorValue("3")
-public class InformationSpecialization implements Specialization {
+public class InformationSpecialization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

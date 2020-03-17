@@ -27,7 +27,7 @@ public class SpecKindServiceImpl implements SpecKindService{
     @Override
     public SpecKind findById(int kindId) {
         Optional<SpecKind> result = specKindRepository.findById(kindId);
-        SpecKind specKind = null;
+        SpecKind specKind;
 
         if (result.isPresent()){
             specKind = result.get();
@@ -37,10 +37,5 @@ public class SpecKindServiceImpl implements SpecKindService{
         }
 
         return specKind;
-    }
-
-    @Override
-    public List<SpecKind> findByFieldOfStudy_Id(int id) {
-        return specKindRepository.findByFieldOfStudy_Id(id);
     }
 }

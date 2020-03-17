@@ -51,7 +51,7 @@ public class SessionController {
     }
 
     @PostMapping("/save")
-    public String saveSession(@Valid @ModelAttribute("mySession") Session mySession, BindingResult bindingResult, Model model){ ;
+    public String saveSession(@Valid @ModelAttribute("mySession") Session mySession, BindingResult bindingResult, Model model){
         try {
             if (mySession.getStudent() == null) throw new NotFoundException("Student not found");
             studentService.findById(mySession.getStudent().getId());

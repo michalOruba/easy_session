@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Easy Session App</title>
@@ -20,6 +20,8 @@
             <a class="list-group-item list-group-item-action list-group-item-primary" th:href="@{/fields/list}">Field of Study list</a>
             <a class="list-group-item list-group-item-action list-group-item-primary" th:href="@{/specs/list}">Specializations list</a>
             <a class="list-group-item list-group-item-action list-group-item-primary" th:href="@{/subjects/list}">Subjects list</a>
+            <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'OWNER')" class="list-group-item list-group-item-action list-group-item-primary" th:href="@{/admin/users/list}">Users list</a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_OWNER')" class="list-group-item list-group-item-action list-group-item-primary" th:href="@{/admin/roles/list}">Roles list</a>
         </div>
     </div>
 
