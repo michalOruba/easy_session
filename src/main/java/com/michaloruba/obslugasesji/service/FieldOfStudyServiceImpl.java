@@ -27,7 +27,7 @@ public class FieldOfStudyServiceImpl implements FieldOfStudyService {
     @Override
     public FieldOfStudy findById(int id) {
         Optional<FieldOfStudy> result = fieldOfStudyRepository.findById(id);
-        FieldOfStudy fieldOfStudy = null;
+        FieldOfStudy fieldOfStudy;
 
         if(result.isPresent()){
             fieldOfStudy = result.get();
@@ -45,6 +45,9 @@ public class FieldOfStudyServiceImpl implements FieldOfStudyService {
 
     @Override
     public void deleteById(int id) {
+        if (!fieldOfStudyRepository.findById(id).isPresent()){
+            throw new NotFoundException("Not found Field with ID - " + id);
+        }
         fieldOfStudyRepository.deleteById(id);
     }
 }

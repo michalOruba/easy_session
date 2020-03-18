@@ -4,7 +4,6 @@ import com.michaloruba.obslugasesji.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,36 +38,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .antMatchers("/register/*").permitAll()
-                .antMatchers("/").authenticated()
-                .antMatchers("/*/list").authenticated()
-                .antMatchers("/*/showSessionDetails").authenticated()
-                .antMatchers("/grades/save*").hasAnyRole("ADMIN", "OWNER", "EMPLOYEE")
-                .antMatchers("/grades/show*").hasAnyRole("ADMIN", "OWNER", "EMPLOYEE")
-                .antMatchers("/*/show*").hasAnyRole("ADMIN", "OWNER")
-                .antMatchers("/*/save*").hasAnyRole("ADMIN", "OWNER")
-                .antMatchers("/*/delete*").hasAnyRole("ADMIN", "OWNER")
-                .antMatchers("/students/search").authenticated()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/admin/*/list").hasRole("OWNER")
-                .antMatchers("/admin/users/showFormForUpdateRoles").hasRole("OWNER")
-                .antMatchers( HttpMethod.GET, "/api/*").authenticated()
-                .antMatchers( HttpMethod.POST, "/api/*").hasAnyRole("ADMIN", "OWNER")
-                .antMatchers( HttpMethod.PUT, "/api/*").hasAnyRole("ADMIN", "OWNER")
-                .antMatchers( HttpMethod.DELETE, "/api/*").hasAnyRole("ADMIN", "OWNER")
-                .and()
-                .formLogin()
-                .loginPage("/showMyLoginPage")
-                .loginProcessingUrl("/authenticateTheUser")
-                .successHandler(customAuthenticationSuccessHandler)
-                .failureHandler(customAuthenticationFailureHandler)
-                .permitAll()
-                .and()
-                .logout()
-                .logoutSuccessHandler(customLogoutSuccessHandler)
-                .permitAll()
-                .and()
-                .exceptionHandling().accessDeniedPage("/access-denied");
+                .antMatchers("/register/*").permitAll();
+//                .antMatchers("/").authenticated()
+//                .antMatchers("/*/list").authenticated()
+//                .antMatchers("/*/showSessionDetails").authenticated()
+//                .antMatchers("/grades/save*").hasAnyRole("ADMIN", "OWNER", "EMPLOYEE")
+//                .antMatchers("/grades/show*").hasAnyRole("ADMIN", "OWNER", "EMPLOYEE")
+//                .antMatchers("/*/show*").hasAnyRole("ADMIN", "OWNER")
+//                .antMatchers("/*/save*").hasAnyRole("ADMIN", "OWNER")
+//                .antMatchers("/*/delete*").hasAnyRole("ADMIN", "OWNER")
+//                .antMatchers("/students/search").authenticated()
+//                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .antMatchers("/admin/*/list").hasRole("OWNER")
+//                .antMatchers("/admin/users/showFormForUpdateRoles").hasRole("OWNER")
+//                .antMatchers( HttpMethod.GET, "/api/*").authenticated()
+//                .antMatchers( HttpMethod.POST, "/api/*").hasAnyRole("ADMIN", "OWNER")
+//                .antMatchers( HttpMethod.PUT, "/api/*").hasAnyRole("ADMIN", "OWNER")
+//                .antMatchers( HttpMethod.DELETE, "/api/*").hasAnyRole("ADMIN", "OWNER")
+//                .and()
+//                .formLogin()
+//                .loginPage("/showMyLoginPage")
+//                .loginProcessingUrl("/authenticateTheUser")
+//                .successHandler(customAuthenticationSuccessHandler)
+//                .failureHandler(customAuthenticationFailureHandler)
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .logoutSuccessHandler(customLogoutSuccessHandler)
+//                .permitAll()
+//                .and()
+//                .exceptionHandling().accessDeniedPage("/access-denied");
 
     }
 

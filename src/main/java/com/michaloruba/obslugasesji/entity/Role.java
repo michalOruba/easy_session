@@ -28,7 +28,7 @@ public class Role {
 	@JoinTable(name = "users_roles",
 			joinColumns = @JoinColumn(name = "role_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private Collection<Role> roles;
+	private Collection<User> users;
 
 	public Role() {
 	}
@@ -37,9 +37,9 @@ public class Role {
 		this.name = name;
 	}
 
-	public Role(String name, Collection<Role> roles) {
+	public Role(String name, Collection<User> users) {
 		this(name);
-		this.roles = roles;
+		this.users = users;
 	}
 
 	public int getId() {
@@ -58,12 +58,12 @@ public class Role {
 		this.name = name;
 	}
 
-	public Collection<Role> getRoles() {
-		return roles;
+	public Collection<User> getUsers() {
+		return users;
 	}
 
-	public void setRoles(Collection<Role> roles) {
-		this.roles = roles;
+	public void setUsers(Collection<User> roles) {
+		this.users = roles;
 	}
 
 	@Override

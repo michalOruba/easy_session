@@ -39,7 +39,6 @@ public class StudentServiceImpl implements StudentService {
         else {
             throw new NotFoundException("Not found student with id - " + id);
         }
-
         return student;
     }
 

@@ -45,6 +45,10 @@ public class SpecializationServiceImpl implements SpecializationService {
 
     @Override
     public void deleteById(int id) {
+        Optional<InformationSpecialization> result = specializationRepository.findById(id);
+        if (!result.isPresent()){
+            throw new NotFoundException("Not found specialization with id - " + id);
+        }
         specializationRepository.deleteById(id);
     }
 }
