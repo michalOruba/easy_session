@@ -3,8 +3,6 @@ package com.michaloruba.obslugasesji.service;
 import com.michaloruba.obslugasesji.dao.RoleRepository;
 import com.michaloruba.obslugasesji.entity.Role;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
-import com.michaloruba.obslugasesji.service.RoleService;
-import com.michaloruba.obslugasesji.service.RoleServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +46,8 @@ public class RoleServiceTest {
                 .thenReturn(tester);
         when(roleRepository.findAll())
                 .thenReturn(List.of(role));
+        when(roleRepository.findRoleByName(role.getName()))
+                .thenReturn(role);
     }
 
     @Test
@@ -101,5 +101,11 @@ public class RoleServiceTest {
         Role role = new Role("ROLE_TESTER");
         Role foundRole = roleRepository.findRoleByName(role.getName());
         assertThat(foundRole.getName()).isEqualTo(role.getName());
+    }
+
+    @Test
+    public void whenFindByWrongName_ThenReturnNull() {
+        Role foundRole = roleRepository.findRoleByName("WRONG_ROLE");
+        assertThat(foundRole).isNull();
     }
 }

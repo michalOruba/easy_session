@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(crmUser.getLastName());
 		user.setEmail(crmUser.getEmail());
 
-		user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_EMPLOYEE")));
+		user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_STUDENT")));
 
 		userRepository.save(user);
 	}
@@ -65,6 +65,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void deleteByUserName(String userName) throws UsernameNotFoundException {
+		if (userRepository.findByUserName(userName) == null){
+			throw new UsernameNotFoundException("Not found User with user name - " + userName);
+		}
 		userRepository.deleteByUserName(userName);
 	}
 
@@ -85,9 +88,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void updateRoles(User user) {
 		User userToSave = findByUserName(user.getUserName());
-
 		userToSave.setRoles(user.getRoles());
-
 		userRepository.save(userToSave);
 	}
 
