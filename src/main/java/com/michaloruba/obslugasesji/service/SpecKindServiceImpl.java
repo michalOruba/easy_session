@@ -5,7 +5,6 @@ import com.michaloruba.obslugasesji.entity.SpecKind;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ public class SpecKindServiceImpl implements SpecKindService{
         this.specKindRepository = specKindRepository;
     }
 
-
     @Override
     public List<SpecKind> findAll() {
         return specKindRepository.findAll();
@@ -28,14 +26,12 @@ public class SpecKindServiceImpl implements SpecKindService{
     public SpecKind findById(int kindId) {
         Optional<SpecKind> result = specKindRepository.findById(kindId);
         SpecKind specKind;
-
         if (result.isPresent()){
             specKind = result.get();
         }
         else {
             throw new NotFoundException("Not found Spec Kind with id - " + kindId);
         }
-
         return specKind;
     }
 }

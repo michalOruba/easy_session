@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
 	/**
 	 * Field injection was used to prevent circular bean dependency
 	 */
@@ -22,16 +21,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private UserService userService;
 
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-			throws IOException {
-
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 		String userName = authentication.getName();
-
 		User theUser = userService.findByUserName(userName);
-
 		HttpSession session = request.getSession();
 		session.setAttribute("user", theUser);
-
 		response.sendRedirect(request.getContextPath() + "/");
 	}
 

@@ -12,8 +12,6 @@ import java.io.IOException;
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
-
-
         httpServletResponse.sendRedirect("/showMyLoginPage?error");
     }
 }

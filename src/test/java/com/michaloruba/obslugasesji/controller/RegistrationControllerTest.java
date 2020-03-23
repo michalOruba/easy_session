@@ -5,7 +5,7 @@ import com.michaloruba.obslugasesji.config.CustomAuthenticationSuccessHandler;
 import com.michaloruba.obslugasesji.config.CustomLogoutSuccessHandler;
 import com.michaloruba.obslugasesji.entity.User;
 import com.michaloruba.obslugasesji.service.UserService;
-import com.michaloruba.obslugasesji.user.CrmUser;
+import com.michaloruba.obslugasesji.entity.CrmUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

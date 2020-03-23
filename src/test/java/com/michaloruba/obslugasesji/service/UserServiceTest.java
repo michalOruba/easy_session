@@ -4,7 +4,7 @@ import com.michaloruba.obslugasesji.dao.RoleRepository;
 import com.michaloruba.obslugasesji.dao.UserRepository;
 import com.michaloruba.obslugasesji.entity.Role;
 import com.michaloruba.obslugasesji.entity.User;
-import com.michaloruba.obslugasesji.user.CrmUser;
+import com.michaloruba.obslugasesji.entity.CrmUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,10 +74,9 @@ public class UserServiceTest {
         assertThat(found.getId()).isEqualTo(user.getId());
     }
 
-    @Test
+    @Test (expected = UsernameNotFoundException.class)
     public void whenFindWrongUserName_ThenReturnNull(){
-        User foundUser = userService.findByUserName("Josh");
-        assertThat(foundUser).isNull();
+        userService.findByUserName("Josh");
     }
 
     @Test
@@ -112,7 +111,7 @@ public class UserServiceTest {
     }
 
     @Test (expected = UsernameNotFoundException.class)
-    public void whenDeleteUserWithWrongUserName_ThenReturnNull(){
+    public void whenDeleteUserWithWrongUserName_ThenThrowUsernameNotFoundException(){
         userService.deleteByUserName("Josh");
     }
 

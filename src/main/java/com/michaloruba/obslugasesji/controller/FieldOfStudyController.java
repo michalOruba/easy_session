@@ -1,6 +1,5 @@
 package com.michaloruba.obslugasesji.controller;
 
-
 import com.michaloruba.obslugasesji.entity.FieldOfStudy;
 import com.michaloruba.obslugasesji.entity.InformationTechnology;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
@@ -12,14 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
 @RequestMapping("/fields")
 public class FieldOfStudyController {
-
     private FieldOfStudyService fieldOfStudyService;
 
     @Autowired
@@ -30,7 +27,6 @@ public class FieldOfStudyController {
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
@@ -38,16 +34,12 @@ public class FieldOfStudyController {
     public String showListOfFields(Model model){
         List<FieldOfStudy> fields =  fieldOfStudyService.findAll();
         model.addAttribute("fields", fields);
-
         return "/fields/fields-list";
     }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model model){
-        FieldOfStudy fieldOfStudy = new InformationTechnology();
-
-        model.addAttribute("fieldOfStudy", fieldOfStudy);
-
+        model.addAttribute("fieldOfStudy", new InformationTechnology());
         return "/fields/field-form";
     }
 
@@ -56,9 +48,7 @@ public class FieldOfStudyController {
         if (bindingResult.hasErrors()){
             return "/fields/field-form";
         }
-
         fieldOfStudyService.save(fieldOfStudy);
-
         return "redirect:/fields/list";
     }
 
@@ -70,12 +60,9 @@ public class FieldOfStudyController {
         } catch (NotFoundException e) {
             return "/error-404";
         }
-
         model.addAttribute("fieldOfStudy", fieldOfStudy);
-
         return "/fields/field-form";
     }
-
 
     @GetMapping("/delete")
     public String deleteField(@RequestParam("fieldId") int fieldId){
@@ -87,5 +74,4 @@ public class FieldOfStudyController {
 
         return "redirect:/fields/list";
     }
-
 }

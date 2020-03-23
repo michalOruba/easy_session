@@ -9,13 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-
 @Aspect
 @Component
 public class LoggingAspect {
 
     private Logger logger = LoggerFactory.getLogger(getClass().getName());
-
 
     @Pointcut("execution(* com.michaloruba.obslugasesji.controller.*.save*(..))")
     private void forControllerSavePackage(){}
@@ -70,7 +68,6 @@ public class LoggingAspect {
         logException(exception);
     }
 
-
     private void logBasicData(JoinPoint joinPoint, String adviceType){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = null;
@@ -82,7 +79,6 @@ public class LoggingAspect {
 
     private void logArguments(JoinPoint joinPoint){
         Object[] args = joinPoint.getArgs();
-
         for(Object tempArg : args){
             logger.info("The argument is: " + tempArg);
         }
@@ -91,5 +87,4 @@ public class LoggingAspect {
     private void logException(Throwable exception){
         logger.warn("The exception is: {}", exception.getMessage());
     }
-
 }

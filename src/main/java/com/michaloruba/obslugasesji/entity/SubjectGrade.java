@@ -13,7 +13,7 @@ public class SubjectGrade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull(message = "is required")
+    @NotNull(message = "this field is required")
     @Column(name = "grade")
     @Enumerated(EnumType.STRING)
     private SubjectGradeTypes grade;
@@ -71,5 +71,15 @@ public class SubjectGrade {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    @Override
+    public String toString() {
+        return "SubjectGrade{" +
+                "id=" + id +
+                ", grade=" + grade +
+                ", subject=" + subject +
+                ", session=" + session +
+                '}';
     }
 }

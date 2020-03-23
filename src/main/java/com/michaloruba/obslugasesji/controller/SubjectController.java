@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,6 @@ public class SubjectController {
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
@@ -47,18 +45,15 @@ public class SubjectController {
     public String showListOfSubjects(@RequestParam("name") Optional<String> name, @RequestParam("page") Optional<Integer> page, Model model){
         int currentPage = page.orElse(1);
         Page<Subject> subjectPage = subjectService.findByName(name.orElse("_"), PageRequest.of(currentPage - 1, 10, Sort.Direction.ASC, "semester", "name"));
+        int totalPages = subjectPage.getTotalPages();
 
         model.addAttribute("subjects", subjectPage);
-
-        int totalPages = subjectPage.getTotalPages();
         if (totalPages > 0){
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-
-
         return "/subjects/subjects-list";
     }
 
@@ -66,35 +61,32 @@ public class SubjectController {
     public String showFormForAdd(Model model){
         model.addAttribute("subject", new Subject());
         model.addAttribute("specs", specializationService.findAll());
-
         return "/subjects/subject-form";
     }
 
     @PostMapping("/save")
     public String saveSubject(@Valid @ModelAttribute Subject subject, BindingResult bindingResult, Model model){
         try {
-            if(subject.getSpecialization() == null) throw new NotFoundException("Specialization not found");
+            if(subject.getSpecialization() == null){
+                throw new NotFoundException("Specialization not found");
+            }
             specializationService.findById(subject.getSpecialization().getId());
         } catch (NotFoundException e){
             logger.warn(e.getMessage());
             bindingResult.rejectValue("specialization", "error.subject", "invalid specialization (can not be null)");
         }
-
         if (bindingResult.hasErrors()){
             model.addAttribute("specs", specializationService.findAll());
             return "/subjects/subject-form";
         }
         subjectService.save(subject);
-
         return "redirect:/subjects/list";
     }
 
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("subId") int subId, Model model){
-
         model.addAttribute("subject", subjectService.findById(subId));
         model.addAttribute("specs", specializationService.findAll());
-
         return "/subjects/subject-form";
     }
 
@@ -103,6 +95,4 @@ public class SubjectController {
         subjectService.deleteById(subId);
         return "redirect:/subjects/list";
     }
-
-
 }

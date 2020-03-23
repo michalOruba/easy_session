@@ -3,13 +3,11 @@ package com.michaloruba.obslugasesji.rest;
 import com.michaloruba.obslugasesji.entity.Session;
 import com.michaloruba.obslugasesji.service.SessionService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class SessionRestController {
-
     private SessionService sessionService;
 
     public SessionRestController(SessionService sessionService) {

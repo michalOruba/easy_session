@@ -39,8 +39,6 @@ public class InformationSpecialization {
     @JoinColumn(name = "spec_kind_id")
     private SpecKind specKind;
 
-
-
     public InformationSpecialization() {
     }
 
@@ -73,7 +71,6 @@ public class InformationSpecialization {
         this.endDate = specializationEndDate;
     }
 
-
     public SpecKind getSpecKind() {
         return specKind;
     }
@@ -82,15 +79,13 @@ public class InformationSpecialization {
         this.specKind = specKind;
     }
 
-
-
-
     @Override
     public String toString() {
         return "InformationSpecialization{" +
                 "id=" + id +
-                ", specializationStartDate=" + startDate +
-                ", specializationEndDate=" + endDate +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", specKind=" + specKind +
                 '}';
     }
 }

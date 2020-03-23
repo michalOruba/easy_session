@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 
 @Controller
@@ -28,43 +27,39 @@ public class SessionController {
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
     @GetMapping("/list")
     public String showListOfSessions(Model model){
         model.addAttribute("mySessions", sessionService.findAll());
-
         return "/sessions/sessions-list";
     }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model model){
         Session session = new Session();
-
         model.addAttribute("students", studentService.findAll());
         model.addAttribute("sessionStatus", SessionStatus.values());
         model.addAttribute("mySession", session);
-
         return "/sessions/session-form";
     }
 
     @PostMapping("/save")
     public String saveSession(@Valid @ModelAttribute("mySession") Session mySession, BindingResult bindingResult, Model model){
         try {
-            if (mySession.getStudent() == null) throw new NotFoundException("Student not found");
+            if (mySession.getStudent() == null){
+                throw new NotFoundException("Student not found");
+            }
             studentService.findById(mySession.getStudent().getId());
         } catch (NotFoundException e){
             bindingResult.rejectValue("student", "error.mySession", "invalid student (can not be null)");
         }
-
         if (bindingResult.hasErrors()){
             model.addAttribute("students", studentService.findAll());
             model.addAttribute("sessionStatus", SessionStatus.values());
             return "/sessions/session-form";
         }
-
         sessionService.save(mySession);
         return "redirect:/sessions/list";
     }
@@ -74,16 +69,12 @@ public class SessionController {
         model.addAttribute("mySession", sessionService.findById(sessionId));
         model.addAttribute("students", studentService.findAll());
         model.addAttribute("sessionStatus", SessionStatus.values());
-
         return "/sessions/session-form";
     }
 
     @GetMapping("/delete")
     public String deleteSession(@RequestParam("sessionId") int sessionId){
         sessionService.deleteById(sessionId);
-
         return "redirect:/sessions/list";
     }
-
-
 }

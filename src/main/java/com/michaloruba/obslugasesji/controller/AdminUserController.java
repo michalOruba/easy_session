@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -20,7 +19,6 @@ import java.util.LinkedList;
 @Controller
 @RequestMapping("/admin/users")
 public class AdminUserController {
-
     private UserService userService;
     private RoleService roleService;
 
@@ -44,12 +42,10 @@ public class AdminUserController {
 
     @PostMapping("/save")
     public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult){
-
         if (bindingResult.hasErrors()){
             return "/users/user-form";
         }
         userService.update(user);
-
         return "redirect:/admin/users/list";
     }
 
@@ -72,29 +68,26 @@ public class AdminUserController {
     @GetMapping("/showFormForUpdateRoles")
     public String showFormForUpdateRoles(@RequestParam("userName") String userName, Model model){
         model.addAttribute("roles", roleService.findAll());
-
         model.addAttribute("user", userService.findByUserName(userName));
-
         return "/users/role-form";
     }
 
     @PostMapping("saveRole")
     public String saveRole(@ModelAttribute("userName") String userName, @RequestParam(required = false, name = "roles") int[] roles){
         User user;
+        Collection<Role> usersRoles = new LinkedList<>();
         try {
             user = userService.findByUserName(userName);
+            if (!(roles == null)) {
+                for (int roleId : roles) {
+                    usersRoles.add(roleService.findById(roleId));
+                }
+            }
         } catch (UsernameNotFoundException e){
             return "/error-404";
         }
-        Collection<Role> usersRoles = new LinkedList<>();
-        if (!(roles == null)) {
-            for (int roleId : roles) {
-                usersRoles.add(roleService.findById(roleId));
-            }
-        }
         user.setRoles(usersRoles);
         userService.updateRoles(user);
-
         return "redirect:/admin/users/list";
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class LoginController {
-
     @GetMapping("/showMyLoginPage")
     public String showMyLoginPage(){
         return "fancy-login";
@@ -21,5 +20,4 @@ public class LoginController {
     public String showPostAccessDenied(){
         return "access-denied";
     }
-
 }

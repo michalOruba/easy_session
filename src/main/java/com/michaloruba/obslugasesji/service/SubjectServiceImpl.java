@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
-
     private SubjectRepository subjectRepository;
 
     @Autowired
@@ -31,14 +29,12 @@ public class SubjectServiceImpl implements SubjectService {
     public Subject findById(int id) {
         Optional<Subject> result = subjectRepository.findById(id);
         Subject subject;
-
         if (result.isPresent()){
             subject = result.get();
         }
         else {
             throw new NotFoundException("Not found Subject with ID - " + id);
         }
-
         return subject;
     }
 

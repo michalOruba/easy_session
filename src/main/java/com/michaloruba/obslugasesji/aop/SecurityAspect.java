@@ -1,6 +1,6 @@
 package com.michaloruba.obslugasesji.aop;
 
-import com.michaloruba.obslugasesji.user.CrmUser;
+import com.michaloruba.obslugasesji.entity.CrmUser;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -41,18 +41,13 @@ public class SecurityAspect {
     @Before("forLoginFlow()")
     public void checkLoginProcess(JoinPoint joinPoint){
         logger.info("METHOD_SIGNATURE " + joinPoint.getSignature().toShortString());
-        Object [] args = joinPoint.getArgs();
-
-        for (Object arg : args){
-
+        for (Object arg : joinPoint.getArgs()){
             if (arg instanceof Authentication){
                 Authentication auth = (Authentication) arg;
-
                 logger.info("AUTHENTICATION: Username: {}, Roles: {}, Is Authenticated: {}", auth.getName(), auth.getAuthorities(), auth.isAuthenticated());
             }
             else if(arg instanceof HttpServletRequest){
                 HttpServletRequest req = (HttpServletRequest) arg;
-
                 logger.info(
                         "REQUEST DATA: Username: {}, Requested URI: {}, Requested URL: {}, Method used: {}, Remote address: {}, Local address: {}",
                         req.getParameter("username"), req.getRequestURI(), req.getRequestURL(), req.getMethod(), req.getRemoteAddr(), req.getLocalAddr()
@@ -64,21 +59,13 @@ public class SecurityAspect {
     @Before("forUserRegistration()")
     public void checkRegistrationProcess(JoinPoint joinPoint){
         logger.info("METHOD_SIGNATURE " + joinPoint.getSignature().toShortString());
-
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                .getRequest();
-
-        Object [] args = joinPoint.getArgs();
-
-        for (Object arg : args) {
-
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof CrmUser) {
                 CrmUser user = (CrmUser) arg;
-
-                logger.info("Registered UserName: {}, request IP address: {}, Requested URI: {}, Requested URL: {}", user.getUserName(), request.getRemoteAddr(), request.getRequestURI(), request.getRequestURL());
+                logger.info("Registered UserName: {}, request IP address: {}, Requested URI: {}, Requested URL: {}",
+                        user.getUserName(), request.getRemoteAddr(), request.getRequestURI(), request.getRequestURL());
             }
         }
-
-
     }
 }

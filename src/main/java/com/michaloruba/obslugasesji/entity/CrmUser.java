@@ -1,4 +1,4 @@
-package com.michaloruba.obslugasesji.user;
+package com.michaloruba.obslugasesji.entity;
 
 import com.michaloruba.obslugasesji.validation.FieldMatch;
 import com.michaloruba.obslugasesji.validation.ValidEmail;
@@ -11,33 +11,32 @@ import javax.validation.constraints.Size;
 })
 public class CrmUser {
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	private String userName;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	private String password;
 	
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	private String matchingPassword;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	private String firstName;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	private String lastName;
 
 	@ValidEmail
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	private String email;
 
 	public CrmUser() {
-
 	}
 
 	public String getUserName() {

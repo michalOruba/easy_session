@@ -59,19 +59,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( HttpMethod.PUT, "/api/*").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers( HttpMethod.DELETE, "/api/*").hasAnyRole("ADMIN", "OWNER")
                 .and()
-                .formLogin()
-                .loginPage("/showMyLoginPage")
-                .loginProcessingUrl("/authenticateTheUser")
-                .successHandler(customAuthenticationSuccessHandler)
-                .failureHandler(customAuthenticationFailureHandler)
-                .permitAll()
+                    .formLogin()
+                    .loginPage("/showMyLoginPage")
+                    .loginProcessingUrl("/authenticateTheUser")
+                    .successHandler(customAuthenticationSuccessHandler)
+                    .failureHandler(customAuthenticationFailureHandler)
+                    .permitAll()
                 .and()
-                .logout()
-                .logoutSuccessHandler(customLogoutSuccessHandler)
-                .permitAll()
+                    .logout()
+                    .logoutSuccessHandler(customLogoutSuccessHandler)
+                    .permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/access-denied");
-
+                    .exceptionHandling().accessDeniedPage("/access-denied");
     }
 
     @Bean

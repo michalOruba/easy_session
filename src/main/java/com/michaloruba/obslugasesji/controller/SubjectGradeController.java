@@ -13,13 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/grades")
 public class SubjectGradeController {
-
     private SessionService sessionService;
     private SubjectGradeService subjectGradeService;
     private Logger logger = LoggerFactory.getLogger(getClass().getName());
@@ -31,10 +29,15 @@ public class SubjectGradeController {
 
     @GetMapping("/showSessionDetails")
     public String showSessionDetails(@RequestParam("sessionId") int sessionId , Model model){
-        Session foundSession = sessionService.findById(sessionId);
+        Session foundSession;
+        try {
+            foundSession = sessionService.findById(sessionId);
+        } catch (NotFoundException e){
+            logger.warn(e.getMessage());
+            return "/error-404";
+        }
         model.addAttribute("mySession", foundSession);
         model.addAttribute("subjectGrades", subjectGradeService.findAllBySession(foundSession));
-
         return "/grades/session-details";
     }
 
@@ -57,7 +60,6 @@ public class SubjectGradeController {
             return "/grades/session-detail-form";
         }
         subjectGradeService.save(subjectGrade);
-
         attributes.addAttribute("sessionId", subjectGrade.getSession().getId());
         return "redirect:/grades/showSessionDetails";
     }

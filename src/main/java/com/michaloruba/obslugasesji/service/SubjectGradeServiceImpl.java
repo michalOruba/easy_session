@@ -6,13 +6,11 @@ import com.michaloruba.obslugasesji.entity.SubjectGrade;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SubjectGradeServiceImpl implements SubjectGradeService {
-
     private SubjectGradeRepository subjectGradeRepository;
 
     @Autowired
@@ -27,17 +25,14 @@ public class SubjectGradeServiceImpl implements SubjectGradeService {
 
     @Override
     public SubjectGrade findById(int id) {
-
         Optional<SubjectGrade> result = subjectGradeRepository.findById(id);
         SubjectGrade subjectGrade;
-
         if (result.isPresent()){
             subjectGrade = result.get();
         }
         else {
             throw new NotFoundException("Not found SubjectGradeList with id - " + id);
         }
-
         return subjectGrade;
     }
 

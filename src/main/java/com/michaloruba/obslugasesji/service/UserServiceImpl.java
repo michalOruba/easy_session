@@ -4,7 +4,7 @@ import com.michaloruba.obslugasesji.dao.RoleRepository;
 import com.michaloruba.obslugasesji.dao.UserRepository;
 import com.michaloruba.obslugasesji.entity.Role;
 import com.michaloruba.obslugasesji.entity.User;
-import com.michaloruba.obslugasesji.user.CrmUser;
+import com.michaloruba.obslugasesji.entity.CrmUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -21,8 +20,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-
 	/**
 	 * Field injection was used to prevent circular bean dependency
 	 */
@@ -33,7 +30,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-
 	@Override
 	public List<User> findAll() {
 		return userRepository.findAll();
@@ -42,15 +38,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User findByUserName(String userName) {
-
-		return userRepository.findByUserName(userName);
+		User foundUser = userRepository.findByUserName(userName);
+		if (foundUser == null){
+			throw new UsernameNotFoundException("Not found User with Username - " + userName);
+		}
+		return  foundUser;
 	}
 
 	@Override
 	@Transactional
 	public void save(CrmUser crmUser) {
 		User user = new User();
-
 		user.setUserName(crmUser.getUserName());
 		user.setPassword(passwordEncoder.encode(crmUser.getPassword()));
 		user.setFirstName(crmUser.getFirstName());
@@ -58,7 +56,6 @@ public class UserServiceImpl implements UserService {
 		user.setEmail(crmUser.getEmail());
 
 		user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_STUDENT")));
-
 		userRepository.save(user);
 	}
 
@@ -75,13 +72,10 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void update(User user) {
 		User userToSave = findByUserName(user.getUserName());
-
 		userToSave.setFirstName(user.getFirstName());
 		userToSave.setLastName(user.getLastName());
 		userToSave.setEmail(user.getEmail());
-
 		userRepository.save(userToSave);
-
 	}
 
 	@Override

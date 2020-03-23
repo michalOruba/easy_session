@@ -1,7 +1,6 @@
 package com.michaloruba.obslugasesji.service;
 
 import com.michaloruba.obslugasesji.entity.Student;
-
 import java.util.List;
 
 public interface StudentService {
@@ -11,5 +10,4 @@ public interface StudentService {
     void deleteById(int id);
     List<Student> searchForStudent(String name);
     List<Student> searchForStudent(int id);
-
-    }
+}

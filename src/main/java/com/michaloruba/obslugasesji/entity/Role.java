@@ -14,8 +14,8 @@ public class Role {
 	@Column(name = "id")
 	private int id;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	@Column(name = "name")
 	private String name;
 
@@ -68,6 +68,10 @@ public class Role {
 
 	@Override
 	public String toString() {
-		return "Role{" + "id=" + id + ", name='" + name + '\'' + '}';
+		return "Role{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", users=" + users +
+				'}';
 	}
 }

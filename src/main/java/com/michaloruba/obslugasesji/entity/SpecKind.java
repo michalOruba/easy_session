@@ -9,6 +9,7 @@ public class SpecKind {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
     @Column(name = "name")
     private String name;
 
@@ -17,7 +18,6 @@ public class SpecKind {
     })
     @JoinColumn(name = "field_of_study_id")
     private FieldOfStudy fieldOfStudy;
-
 
     public SpecKind() {
     }
@@ -50,4 +50,12 @@ public class SpecKind {
         this.fieldOfStudy = fieldOfStudy;
     }
 
+    @Override
+    public String toString() {
+        return "SpecKind{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", fieldOfStudy=" + fieldOfStudy +
+                '}';
+    }
 }

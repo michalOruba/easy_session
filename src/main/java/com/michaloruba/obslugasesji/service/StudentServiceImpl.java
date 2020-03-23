@@ -6,16 +6,13 @@ import com.michaloruba.obslugasesji.entity.Student;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-
     private StudentRepository studentRepository;
     private SessionService sessionService;
-
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository, SessionService sessionService) {
@@ -32,7 +29,6 @@ public class StudentServiceImpl implements StudentService {
     public Student findById(int id) {
         Optional<Student> result = studentRepository.findById(id);
         Student student;
-
         if (result.isPresent()) {
             student = result.get();
         }
@@ -44,7 +40,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void save(Student student) {
-
         if (student.getId() == 0) {
             studentRepository.save(student);
             Session session = new Session(student ,student.getSemester());
@@ -70,6 +65,4 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> searchForStudent(int id) {
         return studentRepository.searchForStudent(id);
     }
-
-
 }

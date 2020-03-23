@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -20,7 +19,6 @@ public class SpecializationController {
     private SpecializationService specializationService;
     private SpecKindService specKindService;
 
-
     @Autowired
     public SpecializationController(SpecializationService specializationService, SpecKindService specKindService) {
         this.specializationService = specializationService;
@@ -29,25 +27,18 @@ public class SpecializationController {
 
     @GetMapping("/list")
     public String showListOfSpecs(Model model){
-        List<InformationSpecialization> specializations = specializationService.findAll();
-
-        model.addAttribute("specializations", specializations);
-
+        model.addAttribute("specializations", specializationService.findAll());
         return "/specializations/specs-list";
     }
 
     @GetMapping("/showFormForSelectSpec")
     public String showFormForSelectSpec(Model model){
-        List<SpecKind> specKinds = specKindService.findAll();
-
-        model.addAttribute("specKinds", specKinds);
-
+        model.addAttribute("specKinds", specKindService.findAll());
         return "/specializations/specs-select-kind";
     }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(@RequestParam("specKindId") int kindId, Model model){
-
         try {
             SpecKind specKind = specKindService.findById(kindId);
             InformationSpecialization specialization = new InformationSpecialization();
@@ -72,8 +63,6 @@ public class SpecializationController {
         return "/specializations/spec-form";
     }
 
-
-
     @PostMapping("/save")
     public String saveSpec(@Valid @ModelAttribute("specialization") InformationSpecialization specialization, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
@@ -86,7 +75,6 @@ public class SpecializationController {
     @GetMapping("/delete")
     public String deleteSpec(@ModelAttribute("specId") int id){
         specializationService.deleteById(id);
-
         return "redirect:/specs/list";
     }
 }

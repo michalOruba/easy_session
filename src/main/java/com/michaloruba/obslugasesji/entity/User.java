@@ -22,19 +22,19 @@ public class User {
 	@Column(name = "password")
 	private String password;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	@Column(name = "first_name")
 	private String firstName;
 
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	@Column(name = "last_name")
 	private String lastName;
 
 	@ValidEmail
-	@NotNull(message = "is required")
-	@Size(min = 1, message = "is required")
+	@NotNull(message = "this field is required")
+	@Size(min = 1, message = "this field is required")
 	@Column(name = "email")
 	private String email;
 
@@ -62,11 +62,7 @@ public class User {
 
 	public User(String userName, String password, String firstName, String lastName, String email,
 			Collection<Role> roles) {
-		this.userName = userName;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
+		this(userName, password, firstName, lastName, email);
 		this.roles = roles;
 	}
 
@@ -128,8 +124,14 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User{" + "id=" + id + ", userName='" + userName + '\'' + ", password='" + "*********" + '\''
-				+ ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", email='" + email + '\''
-				+ ", roles=" + roles + '}';
+		return "User{" +
+				"id=" + id +
+				", userName='" + userName + '\'' +
+				", password='" + password + '\'' +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", email='" + email + '\'' +
+				", roles=" + roles +
+				'}';
 	}
 }

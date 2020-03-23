@@ -21,5 +21,4 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
 		matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
-
 }

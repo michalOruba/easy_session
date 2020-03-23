@@ -17,19 +17,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/students")
 public class StudentController {
-
     private StudentService studentService;
     private SpecializationService specializationService;
     private SessionService sessionService;
     private Logger logger = LoggerFactory.getLogger(getClass().getName());
-
-
 
     @Autowired
     public StudentController(StudentService studentService, SpecializationService specializationService, SessionService sessionService) {
@@ -38,14 +34,11 @@ public class StudentController {
         this.sessionService = sessionService;
     }
 
-
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
-
 
     @GetMapping("/list")
     public String showListOfStudents(Model model){
@@ -56,11 +49,8 @@ public class StudentController {
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model model){
         Student student = new Student();
-
         model.addAttribute("student", student);
         model.addAttribute("specs", specializationService.findAll());
-
-
         return "/students/student-form";
     }
 
@@ -73,24 +63,19 @@ public class StudentController {
             logger.warn(e.getMessage());
             bindingResult.rejectValue("specialization", "error.student", "invalid specialization (can not be null)");
         }
-
         if (bindingResult.hasErrors()){
             model.addAttribute("specs", specializationService.findAll());
             return "/students/student-form";
         }
-        else {
-            student.setSpecialization(specialization);
-            studentService.save(student);
-            return "redirect:/students/list";
-        }
-
+        student.setSpecialization(specialization);
+        studentService.save(student);
+        return "redirect:/students/list";
     }
 
     @GetMapping("/showFormForUpdate")
     public String updateStudent(@RequestParam("studentId") int studentId ,Model model){
         model.addAttribute("student", studentService.findById(studentId));
         model.addAttribute("specs", specializationService.findAll());
-
         return "/students/student-form";
     }
 
@@ -101,7 +86,6 @@ public class StudentController {
         } catch (NotFoundException e){
             return "/error-404";
         }
-
         return "redirect:/students/list";
     }
 
@@ -121,19 +105,14 @@ public class StudentController {
     public String showSessionDetails(@RequestParam("studentId") int studentId, RedirectAttributes attributes, Model model){
         Student student = studentService.findById(studentId);
         Session session = sessionService.findByStudentIdAndSemester(student.getId(), student.getSemester());
-
         if(session == null){
             model.addAttribute("errorMessage", "Sorry, no active session was found for this Student");
             model.addAttribute("students", studentService.findAll());
-
             return "/students/students-list";
         }
-
         attributes.addAttribute("sessionId", session.getId());
-
         return "redirect:/grades/showSessionDetails";
     }
-
 
     private boolean checkIfInteger(String input){
         try {

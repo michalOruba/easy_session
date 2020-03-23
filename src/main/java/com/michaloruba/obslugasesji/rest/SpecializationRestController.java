@@ -10,7 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class SpecializationRestController {
-
     private SpecializationService specializationService;
 
     @Autowired
@@ -43,16 +42,7 @@ public class SpecializationRestController {
 
     @DeleteMapping("/specs/{specId}")
     public String deleteSpec(@PathVariable("specId") int specId){
-        InformationSpecialization specialization = specializationService.findById(specId);
-
-        if (specialization == null){
-            throw new NotFoundException("Not found specialization with id - " + specId);
-        }
-
         specializationService.deleteById(specId);
-
         return "Deleted specialization with id - " + specId;
     }
-
-
 }
