@@ -6,6 +6,7 @@ import com.michaloruba.obslugasesji.service.RoleService;
 import com.michaloruba.obslugasesji.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,13 +19,13 @@ import java.util.LinkedList;
 
 @Controller
 @RequestMapping("/admin/users")
-public class AdminUsersController {
+public class AdminUserController {
 
     private UserService userService;
     private RoleService roleService;
 
     @Autowired
-    public AdminUsersController(UserService userService, RoleService roleService) {
+    public AdminUserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -54,8 +55,11 @@ public class AdminUsersController {
 
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("userName") String userName, Model model){
-        model.addAttribute("user", userService.findByUserName(userName));
-
+        try {
+            model.addAttribute("user", userService.findByUserName(userName));
+        } catch (UsernameNotFoundException e){
+            return "/error-404";
+        }
         return "/users/user-form";
     }
 
@@ -74,18 +78,22 @@ public class AdminUsersController {
         return "/users/role-form";
     }
 
-    @GetMapping("saveRole")
-    public String saveRole(@ModelAttribute("userName") String userName, @RequestParam("roles") int[] roles){
-        User user = userService.findByUserName(userName);
-        Collection<Role> usersRoles = new LinkedList<>();
-        for (int roleId : roles) {
-                usersRoles.add(roleService.findById(roleId));
+    @PostMapping("saveRole")
+    public String saveRole(@ModelAttribute("userName") String userName, @RequestParam(required = false, name = "roles") int[] roles){
+        User user;
+        try {
+            user = userService.findByUserName(userName);
+        } catch (UsernameNotFoundException e){
+            return "/error-404";
         }
-
+        Collection<Role> usersRoles = new LinkedList<>();
+        if (!(roles == null)) {
+            for (int roleId : roles) {
+                usersRoles.add(roleService.findById(roleId));
+            }
+        }
         user.setRoles(usersRoles);
         userService.updateRoles(user);
-
-
 
         return "redirect:/admin/users/list";
     }

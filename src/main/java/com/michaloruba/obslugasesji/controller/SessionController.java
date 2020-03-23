@@ -36,7 +36,7 @@ public class SessionController {
     public String showListOfSessions(Model model){
         model.addAttribute("mySessions", sessionService.findAll());
 
-        return "/sessions/session-list";
+        return "/sessions/sessions-list";
     }
 
     @GetMapping("/showFormForAdd")

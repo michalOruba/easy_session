@@ -1,7 +1,9 @@
 package com.michaloruba.obslugasesji.controller;
 
+import com.michaloruba.obslugasesji.entity.Session;
 import com.michaloruba.obslugasesji.entity.SubjectGrade;
 import com.michaloruba.obslugasesji.helper.SubjectGradeTypes;
+import com.michaloruba.obslugasesji.rest.NotFoundException;
 import com.michaloruba.obslugasesji.service.SessionService;
 import com.michaloruba.obslugasesji.service.SubjectGradeService;
 import org.slf4j.Logger;
@@ -29,15 +31,20 @@ public class SubjectGradeController {
 
     @GetMapping("/showSessionDetails")
     public String showSessionDetails(@RequestParam("sessionId") int sessionId , Model model){
-        model.addAttribute("mySession", sessionService.findById(sessionId));
-        model.addAttribute("subjectGrades", subjectGradeService.findAllBySession(sessionService.findById(sessionId)));
+        Session foundSession = sessionService.findById(sessionId);
+        model.addAttribute("mySession", foundSession);
+        model.addAttribute("subjectGrades", subjectGradeService.findAllBySession(foundSession));
 
         return "/grades/session-details";
     }
 
     @GetMapping("/showFormForUpdateGrade")
     public String showFormForUpdateGrade(@RequestParam("subjectGradeId") int subjectGradeId, Model model){
-        model.addAttribute("subject", subjectGradeService.findById(subjectGradeId));
+        try {
+            model.addAttribute("subject", subjectGradeService.findById(subjectGradeId));
+        } catch (NotFoundException e){
+            return "/error-404";
+        }
         model.addAttribute("grades", SubjectGradeTypes.values());
         return "/grades/session-detail-form";
     }

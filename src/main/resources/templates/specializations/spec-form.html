@@ -12,7 +12,7 @@
 
     <p>Save Specialization</p>
 
-    <form th:action="@{/specs/saveSpec}" th:object="${specialization}" method="POST">
+    <form th:action="@{/specs/save}" th:object="${specialization}" method="POST">
         <input type="hidden" th:field="*{id}" class="form-control mb-4 col-4" placeholder="Name">
         <input id="name" type="hidden" th:field="*{specKind.id}" class="form-control mb-4 col-4" placeholder="Name">
         <div class="row justify-content-center align-items-center mx-2 mx-md-0">

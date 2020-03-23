@@ -1,5 +1,6 @@
 package com.michaloruba.obslugasesji.controller;
 
+import com.michaloruba.obslugasesji.entity.InformationSpecialization;
 import com.michaloruba.obslugasesji.entity.Session;
 import com.michaloruba.obslugasesji.entity.Student;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
@@ -49,7 +50,7 @@ public class StudentController {
     @GetMapping("/list")
     public String showListOfStudents(Model model){
         model.addAttribute("students", studentService.findAll());
-        return "/students/student-list";
+        return "/students/students-list";
     }
 
     @GetMapping("/showFormForAdd")
@@ -65,24 +66,24 @@ public class StudentController {
 
     @PostMapping("/save")
     public String saveStudent(@Valid @ModelAttribute Student student, BindingResult bindingResult, Model model, @RequestParam("specId") int specId){
+        InformationSpecialization specialization = null;
         try {
-            specializationService.findById(specId);
+            specialization = specializationService.findById(specId);
         } catch (NotFoundException e){
             logger.warn(e.getMessage());
             bindingResult.rejectValue("specialization", "error.student", "invalid specialization (can not be null)");
         }
 
-        student.setSpecialization(specializationService.findById(specId));
-
         if (bindingResult.hasErrors()){
             model.addAttribute("specs", specializationService.findAll());
-
             return "/students/student-form";
         }
         else {
+            student.setSpecialization(specialization);
             studentService.save(student);
             return "redirect:/students/list";
         }
+
     }
 
     @GetMapping("/showFormForUpdate")
@@ -95,33 +96,25 @@ public class StudentController {
 
     @GetMapping("/delete")
     public String deleteStudent(@RequestParam("studentId") int id){
-        studentService.deleteById(id);
+        try {
+            studentService.deleteById(id);
+        } catch (NotFoundException e){
+            return "/error-404";
+        }
 
         return "redirect:/students/list";
     }
 
     @PostMapping("/search")
     public String showResultList(@RequestParam("usernameOrId") String usernameOrId,Model model) {
-
         if (!checkIfInteger(usernameOrId)){
             model.addAttribute("students", studentService.searchForStudent(usernameOrId));
         }
         else {
             model.addAttribute("students", studentService.searchForStudent(Integer.parseInt(usernameOrId)));
         }
-
         model.addAttribute("input", usernameOrId);
-
-        return "/students/student-list";
-    }
-
-    private boolean checkIfInteger(String input){
-        try {
-            Integer.parseInt(input);
-        } catch (NumberFormatException e){
-            return false;
-        }
-        return true;
+        return "/students/students-list";
     }
 
     @GetMapping("/showSessionDetails")
@@ -133,11 +126,21 @@ public class StudentController {
             model.addAttribute("errorMessage", "Sorry, no active session was found for this Student");
             model.addAttribute("students", studentService.findAll());
 
-            return "/students/student-list";
+            return "/students/students-list";
         }
 
         attributes.addAttribute("sessionId", session.getId());
 
         return "redirect:/grades/showSessionDetails";
+    }
+
+
+    private boolean checkIfInteger(String input){
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e){
+            return false;
+        }
+        return true;
     }
 }

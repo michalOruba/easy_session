@@ -4,6 +4,7 @@ package com.michaloruba.obslugasesji.entity;
 import com.michaloruba.obslugasesji.helper.SubjectGradeTypes;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "subject_grade_map")
@@ -12,6 +13,7 @@ public class SubjectGrade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull(message = "is required")
     @Column(name = "grade")
     @Enumerated(EnumType.STRING)
     private SubjectGradeTypes grade;

@@ -12,7 +12,7 @@
 
     <p th:text="'Save role for user: '  + ${user.userName}"></p>
 
-    <form action="#" th:action="@{/admin/users/saveRole}" th:object="${user}" method="get">
+    <form action="#" th:action="@{/admin/users/saveRole}" th:object="${user}" method="POST">
         <input type="hidden" th:field="*{userName}" class="form-control mb-4 col-4"/>
 
         <table class="table table-bordered table-striped">

@@ -3,8 +3,6 @@ package com.michaloruba.obslugasesji.service;
 import com.michaloruba.obslugasesji.dao.SpecializationRepository;
 import com.michaloruba.obslugasesji.entity.InformationSpecialization;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
-import com.michaloruba.obslugasesji.service.SpecializationService;
-import com.michaloruba.obslugasesji.service.SpecializationServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +27,7 @@ public class SpecializationServiceTest {
         private SpecializationRepository specializationRepository;
 
         @Bean
-        public SpecializationServiceImpl roleService() {
+        public SpecializationService specializationService() {
             return new SpecializationServiceImpl(specializationRepository);
         }
     }

@@ -33,7 +33,7 @@ public class SpecializationController {
 
         model.addAttribute("specializations", specializations);
 
-        return "specializations/specs-list";
+        return "/specializations/specs-list";
     }
 
     @GetMapping("/showFormForSelectSpec")
@@ -55,7 +55,6 @@ public class SpecializationController {
             model.addAttribute("specialization", specialization);
         } catch (NotFoundException e){
             List<SpecKind> specKinds = specKindService.findAll();
-
             model.addAttribute("message", "invalid specialization kind (Can not be null)");
             model.addAttribute("specKinds", specKinds);
             return "/specializations/specs-select-kind";
@@ -66,30 +65,25 @@ public class SpecializationController {
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("specId") int specId, Model model){
         try {
-            InformationSpecialization specialization = specializationService.findById(specId);
-
-            model.addAttribute("specialization", specialization);
+            model.addAttribute("specialization", specializationService.findById(specId));
         } catch (NotFoundException e ){
-            return "redirect:/specs/list";
+            return "/error-404";
         }
         return "/specializations/spec-form";
     }
 
 
 
-    @PostMapping("/saveSpec")
+    @PostMapping("/save")
     public String saveSpec(@Valid @ModelAttribute("specialization") InformationSpecialization specialization, BindingResult bindingResult){
-
         if (bindingResult.hasErrors()){
             return "/specializations/spec-form";
         }
-
         specializationService.save(specialization);
-
         return "redirect:/specs/list";
     }
 
-    @GetMapping("/deleteSpec")
+    @GetMapping("/delete")
     public String deleteSpec(@ModelAttribute("specId") int id){
         specializationService.deleteById(id);
 

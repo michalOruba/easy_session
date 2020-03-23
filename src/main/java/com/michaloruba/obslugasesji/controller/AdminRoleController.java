@@ -1,6 +1,7 @@
 package com.michaloruba.obslugasesji.controller;
 
 import com.michaloruba.obslugasesji.entity.Role;
+import com.michaloruba.obslugasesji.rest.NotFoundException;
 import com.michaloruba.obslugasesji.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,11 @@ public class AdminRoleController {
 
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("roleId") int roleId, Model model){
-        model.addAttribute("role", roleService.findById(roleId));
+        try {
+            model.addAttribute("role", roleService.findById(roleId));
+        } catch (NotFoundException e){
+            return "/error-404";
+        }
 
         return "/roles/role-form";
     }
@@ -46,15 +51,17 @@ public class AdminRoleController {
         if (bindingResult.hasErrors()){
             return "/roles/role-form";
         }
-
         roleService.save(role);
-
         return "redirect:/admin/roles/list";
     }
 
     @GetMapping("/delete")
     public String deleteRole(@RequestParam("roleId") int roleId){
-        roleService.deleteById(roleId);
+        try {
+            roleService.deleteById(roleId);
+        } catch (NotFoundException e){
+            return "/error-404";
+        }
 
         return "redirect:/admin/roles/list";
     }

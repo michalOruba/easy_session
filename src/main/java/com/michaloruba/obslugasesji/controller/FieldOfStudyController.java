@@ -3,6 +3,7 @@ package com.michaloruba.obslugasesji.controller;
 
 import com.michaloruba.obslugasesji.entity.FieldOfStudy;
 import com.michaloruba.obslugasesji.entity.InformationTechnology;
+import com.michaloruba.obslugasesji.rest.NotFoundException;
 import com.michaloruba.obslugasesji.service.FieldOfStudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -38,7 +39,7 @@ public class FieldOfStudyController {
         List<FieldOfStudy> fields =  fieldOfStudyService.findAll();
         model.addAttribute("fields", fields);
 
-        return "fields/field-list";
+        return "/fields/fields-list";
     }
 
     @GetMapping("/showFormForAdd")
@@ -61,9 +62,14 @@ public class FieldOfStudyController {
         return "redirect:/fields/list";
     }
 
-    @GetMapping("/showUpdateForm")
+    @GetMapping("/showFormForUpdate")
     public String updateField(@RequestParam("fieldId") int fieldId, Model model){
-        FieldOfStudy fieldOfStudy = fieldOfStudyService.findById(fieldId);
+        FieldOfStudy fieldOfStudy;
+        try {
+            fieldOfStudy = fieldOfStudyService.findById(fieldId);
+        } catch (NotFoundException e) {
+            return "/error-404";
+        }
 
         model.addAttribute("fieldOfStudy", fieldOfStudy);
 
@@ -73,8 +79,11 @@ public class FieldOfStudyController {
 
     @GetMapping("/delete")
     public String deleteField(@RequestParam("fieldId") int fieldId){
-
-        fieldOfStudyService.deleteById(fieldId);
+        try {
+            fieldOfStudyService.deleteById(fieldId);
+        } catch (NotFoundException e){
+            return "/error-404";
+        }
 
         return "redirect:/fields/list";
     }

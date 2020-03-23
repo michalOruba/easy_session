@@ -31,7 +31,7 @@
             <td th:text="${spec.specKind.fieldOfStudy.name}"></td>
             <td sec:authorize="hasAnyAuthority('ROLE_OWNER', 'ROLE_ADMIN')">
                 <a th:href="@{/specs/showFormForUpdate(specId=${spec.id})}" class="btn btn-sm btn-warning mr-3">Update</a>
-                <a th:href="@{/specs/deleteSpec(specId=${spec.id})}" class="btn btn-sm btn-danger"
+                <a th:href="@{/specs/delete(specId=${spec.id})}" class="btn btn-sm btn-danger"
                 onclick="if(!(confirm('Are you sure you want to delete this Specialization?'))) return false;"
                 >Delete</a>
             </td>

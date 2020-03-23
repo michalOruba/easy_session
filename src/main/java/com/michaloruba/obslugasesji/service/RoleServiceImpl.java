@@ -25,7 +25,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findById(int id) {
+    public Role findById(int id) throws NotFoundException {
         Optional<Role> result = roleRepository.findById(id);
         Role role;
         if (result.isPresent()){
@@ -47,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(int id) throws NotFoundException {
         Optional<Role> result = roleRepository.findById(id);
         if (!result.isPresent()){
             throw new NotFoundException("Not found Role with id - " + id);
