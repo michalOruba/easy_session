@@ -98,7 +98,7 @@ public class SubjectGradeControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showSessionDetails_ShouldAddSubjectGradesWithSubjectsAndRenderSubjectGradesListView() throws Exception {
+    public void showSessionDetails_ShouldAddSubjectGradesWithSubjectsToModelAndRenderSubjectGradesListView() throws Exception {
         given(sessionService.findById(1)).willReturn(session);
         given(subjectGradeService.findAllBySession(session)).willReturn(subjectGrades);
 
@@ -124,10 +124,12 @@ public class SubjectGradeControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdateGrade_ShouldAddExistingSubjectGradeAndRenderSubjectGradeForm() throws Exception {
+    public void showFormForUpdateGrade_ShouldAddExistingSubjectGradeToModelAndRenderSubjectGradeForm() throws Exception {
         given(subjectGradeService.findById(1)).willReturn(subjectGrade);
 
-        mvc.perform(get("/grades/showFormForUpdateGrade").param("subjectGradeId", "1"))
+        mvc.perform(get("/grades/showFormForUpdateGrade")
+                .param("subjectGradeId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/grades/session-detail-form"))
                 .andExpect(model().attribute("subject", hasProperty("id", is(subjectGrade.getId()))))
@@ -141,7 +143,7 @@ public class SubjectGradeControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdateGrade_ShouldThrowNotFoundExceptionWhenWrongIdPassed() throws Exception{
+    public void showFormForUpdateGrade_ShouldThrowNotFoundException_WhenWrongIdPassed() throws Exception{
         when(subjectGradeService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
@@ -150,7 +152,9 @@ public class SubjectGradeControllerTest {
          */
         subjectGradeService.findById(-1);
 
-        mvc.perform(get("/grades/showFormForUpdateGrade").param("subjectGradeId", "-1"))
+        mvc.perform(get("/grades/showFormForUpdateGrade")
+                .param("subjectGradeId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(subjectGradeService, times(1)).findById(-1);
@@ -175,14 +179,16 @@ public class SubjectGradeControllerTest {
 
     @Test
     @WithMockUser(roles = "OWNER")
-    public void givenOwnerAuthRequestOnSubjectGradeService_shouldSucceedWith200() throws Exception {
+    public void givenOwnerAuthRequestOnSubjectGradeService_shouldSucceedWith200Or3xx() throws Exception {
         given(sessionService.findById(1)).willReturn(session);
         given(subjectGradeService.findAllBySession(session)).willReturn(subjectGrades);
         given(subjectGradeService.findById(1)).willReturn(subjectGrade);
 
-        mvc.perform(get("/grades/showSessionDetails").param("sessionId", "1"))
+        mvc.perform(get("/grades/showSessionDetails")
+                .param("sessionId", "1"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/grades/showFormForUpdateGrade").param("subjectGradeId", "1"))
+        mvc.perform(get("/grades/showFormForUpdateGrade")
+                .param("subjectGradeId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(post("/grades/saveDetail")
                 .flashAttr("subject", subjectGrade)
@@ -193,32 +199,39 @@ public class SubjectGradeControllerTest {
 
     @Test
     @WithMockUser(roles = "EMPLOYEE")
-    public void givenEmployeeAuthRequestOnSubjectGradeService_shouldSucceedWith200() throws Exception {
+    public void givenEmployeeAuthRequestOnSubjectGradeService_shouldSucceedWith200Or3xx() throws Exception {
         given(sessionService.findById(1)).willReturn(session);
         given(subjectGradeService.findAllBySession(session)).willReturn(subjectGrades);
         given(subjectGradeService.findById(1)).willReturn(subjectGrade);
 
-        mvc.perform(get("/grades/showSessionDetails").param("sessionId", "1"))
+        mvc.perform(get("/grades/showSessionDetails")
+                .param("sessionId", "1"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/grades/showFormForUpdateGrade").param("subjectGradeId", "1"))
+        mvc.perform(get("/grades/showFormForUpdateGrade")
+                .param("subjectGradeId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(post("/grades/saveDetail")
                 .flashAttr("subject", subjectGrade)
-                .with(csrf())
-        )
+                .with(csrf()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     @WithMockUser(roles = {"STUDENT"})
-    public void givenStudentAuthRequestOnSubjectGradeService_shouldSucceedWith403() throws Exception {
+    public void givenStudentAuthRequestOnSubjectGradeServiceList_shouldSucceedWith200() throws Exception {
         given(sessionService.findById(1)).willReturn(session);
         given(subjectGradeService.findAllBySession(session)).willReturn(subjectGrades);
-        given(subjectGradeService.findById(1)).willReturn(subjectGrade);
 
-        mvc.perform(get("/grades/showSessionDetails").param("sessionId", "1"))
+        mvc.perform(get("/grades/showSessionDetails")
+                .param("sessionId", "1"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/grades/showFormForUpdateGrade").param("subjectGradeId", "1"))
+    }
+    @Test
+    @WithMockUser(roles = {"STUDENT"})
+    public void givenStudentAuthRequestOnSubjectGradeService_shouldFailedWith403() throws Exception {
+
+        mvc.perform(get("/grades/showFormForUpdateGrade")
+                .param("subjectGradeId", "1"))
                 .andExpect(status().isForbidden());
         mvc.perform(post("/grades/saveDetail")
                 .with(csrf()))

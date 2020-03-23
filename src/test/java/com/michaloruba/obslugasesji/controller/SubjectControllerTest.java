@@ -89,8 +89,7 @@ public class SubjectControllerTest {
     public void list_ShouldAddPageObjectWithSubjectsAndRenderSubjectListView() throws Exception {
         when(subjectService.findByName("_", PageRequest.of(0, 10, Sort.Direction.ASC, "semester", "name"))).thenReturn(new PageImpl<>(subjects));
 
-        mvc.perform(get("/subjects/list")
-        )
+        mvc.perform(get("/subjects/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/subjects/subjects-list"))
                 .andExpect(model().attribute("subjects", new PageImpl<>(subjects)))
@@ -133,7 +132,9 @@ public class SubjectControllerTest {
         given(subjectService.findById(1)).willReturn(subject);
         when(specializationService.findAll()).thenReturn(specializations);
 
-        mvc.perform(get("/subjects/showFormForUpdate").param("subId", "1"))
+        mvc.perform(get("/subjects/showFormForUpdate")
+                .param("subId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/subjects/subject-form"))
                 .andExpect(model().attribute("subject", hasProperty("id", is(subject.getId()))))
@@ -157,7 +158,7 @@ public class SubjectControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldThrowNotFoundExceptionWhenWrongIdPassed() throws Exception{
+    public void showFormForUpdate_ShouldThrowNotFoundException_WhenWrongIdPassed() throws Exception{
         when(subjectService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
@@ -166,7 +167,9 @@ public class SubjectControllerTest {
          */
         subjectService.findById(-1);
 
-        mvc.perform(get("/subjects/showFormForUpdate").param("subId", "-1"))
+        mvc.perform(get("/subjects/showFormForUpdate")
+                .param("subId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(subjectService, times(2)).findById(-1);
@@ -179,7 +182,9 @@ public class SubjectControllerTest {
         doNothing().when(subjectService).save(subject);
 
         mvc.perform(post("/subjects/save")
-                    .with(csrf()).flashAttr("subject", subject))
+                .with(csrf())
+                .flashAttr("subject", subject)
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/subjects/list"));
         verify(subjectService, times(1)).save(isA(Subject.class));
@@ -188,11 +193,12 @@ public class SubjectControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveSubject_WhenFormIsNotValid_AndReturnFormView() throws Exception {
+    public void save_ShouldNotSaveSubjectAndReturnFormView_WhenFormIsNotValid() throws Exception {
         doNothing().when(subjectService).save(isA(Subject.class));
 
         mvc.perform(post("/subjects/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("subject", 5))
                 .andExpect(model().attributeHasFieldErrors("subject", "semester"))
@@ -206,7 +212,7 @@ public class SubjectControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveSubjectWhenWrongIdPassed_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void save_ShouldNotSaveSubjectThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(subjectService).findById(-1);
 
         /*
@@ -216,7 +222,8 @@ public class SubjectControllerTest {
         subjectService.findById(-1);
 
         mvc.perform(get("/subjects/save")
-                .param("subId", "1"))
+                .param("subId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(subjectService, times(2)).deleteById(-1);
@@ -229,7 +236,8 @@ public class SubjectControllerTest {
         doNothing().when(subjectService).deleteById(1);
 
         mvc.perform(get("/subjects/delete")
-                    .param("subId", "1"))
+                .param("subId", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/subjects/list"));
         verify(subjectService, times(1)).deleteById(1);
@@ -238,7 +246,7 @@ public class SubjectControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void delete_ShouldNotDeleteSubject_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void delete_ShouldNotDeleteSubjectThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(subjectService).deleteById(-1);
 
         /*
@@ -248,7 +256,8 @@ public class SubjectControllerTest {
         subjectService.deleteById(-1);
 
         mvc.perform(get("/subjects/delete")
-                .param("subId", "-1"))
+                .param("subId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(subjectService, times(2)).deleteById(-1);
@@ -258,7 +267,7 @@ public class SubjectControllerTest {
 
     @Test
     @WithMockUser(roles = "OWNER")
-    public void givenOwnerAuthRequestOnSessionService_shouldSucceedWith200() throws Exception {
+    public void givenOwnerAuthRequestOnSessionService_shouldSucceedWith200Or3xx() throws Exception {
         when(subjectService.findByName("_", PageRequest.of(0, 10, Sort.Direction.ASC, "semester", "name"))).thenReturn(new PageImpl<>(subjects));
         given(subjectService.findById(1)).willReturn(subject);
 
@@ -266,18 +275,21 @@ public class SubjectControllerTest {
                 .andExpect(status().isOk());
         mvc.perform(get("/subjects/showFormForAdd"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/subjects/showFormForUpdate").param("subId", "1"))
+        mvc.perform(get("/subjects/showFormForUpdate")
+                .param("subId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(post("/subjects/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk());
-        mvc.perform(get("/subjects/delete").param("subId", "1"))
+        mvc.perform(get("/subjects/delete")
+                .param("subId", "1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
-    public void givenStudentOrEmployeeAuthRequestOnSessionService_shouldSucceedWith403_ListShouldGive200() throws Exception {
+    public void givenStudentOrEmployeeAuthRequestOnSubjectServiceList_shouldSucceedWith200() throws Exception {
         when(subjectService.findByName("_", PageRequest.of(0, 10, Sort.Direction.ASC, "semester", "name"))).thenReturn(new PageImpl<>(subjects));
 
         mvc.perform(get("/subjects/list")
@@ -285,12 +297,19 @@ public class SubjectControllerTest {
                 .param("page", "1")
         )
                 .andExpect(status().isOk());
+    }
+    @Test
+    @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
+    public void givenStudentOrEmployeeAuthRequestOnSubjectService_shouldFailedWith403() throws Exception {
+        when(subjectService.findByName("_", PageRequest.of(0, 10, Sort.Direction.ASC, "semester", "name"))).thenReturn(new PageImpl<>(subjects));
+
         mvc.perform(get("/subjects/showFormForAdd"))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/subjects/showFormForUpdate"))
                 .andExpect(status().isForbidden());
         mvc.perform(post("/subjects/save")
-                    .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isForbidden());
         mvc.perform(get("/subjects/delete"))
                 .andExpect(status().isForbidden());

@@ -38,7 +38,7 @@ public class RegistrationControllerTest {
     private MockMvc mvc;
 
     @Test
-    public void showRegistrationForm_ShouldAddEmptyCrmUserAndRenderRegisterForm() throws Exception {
+    public void showRegistrationForm_ShouldAddEmptyCrmUserToModelAndRenderRegisterForm() throws Exception {
         mvc.perform(get("/register/showRegistrationForm"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration-form"))
@@ -67,7 +67,7 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void processRegistrationFormWithExistingUser_ShouldRedirectToRegistration() throws Exception {
+    public void processRegistrationForm_ShouldRedirectToRegistration_WhenUserAlreadyExists() throws Exception {
         doNothing().when(userService).save(isA(CrmUser.class));
         when(userService.findByUserName("test")).thenReturn(new User());
 
@@ -89,7 +89,8 @@ public class RegistrationControllerTest {
     @Test
     public void processRegistrationFormWithErrors_ShouldRedirectToRegistration() throws Exception {
         mvc.perform(post("/register/processRegistrationForm")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("crmUser", 7))
                 .andExpect(model().attributeHasFieldErrors("crmUser", "userName"))

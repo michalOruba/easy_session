@@ -25,13 +25,11 @@ public class SubjectRepositoryTest {
     private SubjectRepository subjectRepository;
     @Autowired
     private TestEntityManager entityManager;
-
     private Subject subject;
-    private InformationSpecialization specialization;
 
     @Before
     public void setUp(){
-        specialization = new InformationSpecialization();
+        InformationSpecialization specialization = new InformationSpecialization();
         specialization.setSpecKind(null);
         specialization.setStartDate(LocalDate.of(2020,5,1));
         specialization.setEndDate(LocalDate.of(2021,5,1));
@@ -47,7 +45,7 @@ public class SubjectRepositoryTest {
     }
 
     @Test
-    public void whenFindAllBySemesterAndSpecialization_ThenReturnSubject() {
+    public void whenFindAllBySemesterAndSpecialization_ThenReturnListOfSubjects() {
         List<Subject> foundSubjects = subjectRepository.findAllBySemesterAndSpecialization(subject.getSemester(), subject.getSpecialization());
         assertThat(foundSubjects.get(0).getName()).isEqualTo(subject.getName());
     }

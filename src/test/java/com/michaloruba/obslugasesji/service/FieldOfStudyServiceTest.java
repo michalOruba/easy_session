@@ -3,8 +3,6 @@ package com.michaloruba.obslugasesji.service;
 import com.michaloruba.obslugasesji.dao.FieldOfStudyRepository;
 import com.michaloruba.obslugasesji.entity.FieldOfStudy;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
-import com.michaloruba.obslugasesji.service.FieldOfStudyService;
-import com.michaloruba.obslugasesji.service.FieldOfStudyServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

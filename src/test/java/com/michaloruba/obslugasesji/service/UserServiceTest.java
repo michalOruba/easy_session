@@ -28,7 +28,6 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest {
     @TestConfiguration
     static class UserServiceImplTestContextConfiguration {
-
         @Bean
         public UserService userService() {
             return new UserServiceImpl();
@@ -43,16 +42,11 @@ public class UserServiceTest {
     private RoleRepository roleRepository;
     @MockBean
     private BCryptPasswordEncoder passwordEncoder;
-
-
     private User user;
-    private  Role role;
-
 
     @Before
     public void setUp() {
-
-        role = new Role();
+        Role role = new Role();
         role.setName("ROLE_STUDENT");
         role.setId(1);
 
@@ -125,14 +119,12 @@ public class UserServiceTest {
     @Test
     public void whenUpdateUser_ThenOneInteractionOccurs(){
         userService.update(user);
-
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
     public void whenLoadUserByUsername_ThenReturnNewUserDetails(){
         UserDetails foundUserDetails = userService.loadUserByUsername(user.getUserName());
-
         assertThat(foundUserDetails.getUsername()).isEqualTo(user.getUserName());
     }
 
@@ -140,5 +132,4 @@ public class UserServiceTest {
     public void whenLoadUserByWrongUsername_ThenThrowUsernameNotFoundException(){
         userService.loadUserByUsername("Josh");
     }
-
 }

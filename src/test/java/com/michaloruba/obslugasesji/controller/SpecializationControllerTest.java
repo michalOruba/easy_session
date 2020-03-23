@@ -58,7 +58,6 @@ public class SpecializationControllerTest {
 
     @BeforeClass
     public static void setUp(){
-
         FieldOfStudy fieldOfStudy = new FieldOfStudy("Information Technology");
         fieldOfStudy.setId(1);
 
@@ -74,7 +73,6 @@ public class SpecializationControllerTest {
         specialization.setStartDate(LocalDate.of(2020,5,1));
         specialization.setEndDate(LocalDate.of(2021,5,1));
         specializations = Arrays.asList(specialization);
-
     }
 
     @Test
@@ -100,7 +98,7 @@ public class SpecializationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForSelectSpec_ShouldSpecializationKindsAndRenderSpecializationKindSelectForm() throws Exception {
+    public void showFormForSelectSpec_ShouldAddSpecializationKindsToModelAndRenderSpecializationKindSelectForm() throws Exception {
         when(specKindService.findAll()).thenReturn(specKinds);
 
         mvc.perform(get("/specs/showFormForSelectSpec"))
@@ -122,7 +120,7 @@ public class SpecializationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForAdd_ShouldAddEmptySpecializationWithSelectedEarlierSpecKindAndRenderSpecializationForm() throws Exception {
+    public void showFormForAdd_ShouldAddEmptySpecializationWithSelectedSpecKindAndRenderSpecializationForm() throws Exception {
         when(specKindService.findById(1)).thenReturn(specKind);
         when(specializationService.findAll()).thenReturn(specializations);
 
@@ -142,7 +140,7 @@ public class SpecializationControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForAdd_ShouldThrowNotFoundExceptionWhenWrongSpecKindPassed() throws Exception{
+    public void showFormForAdd_ShouldThrowNotFoundException_WhenWrongSpecKindPassed() throws Exception{
         when(specKindService.findById(-1)).thenThrow(NotFoundException.class);
         when(specKindService.findAll()).thenReturn(specKinds);
 
@@ -168,10 +166,12 @@ public class SpecializationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldAddExistingSpecializationAndRenderSpecializationForm() throws Exception {
+    public void showFormForUpdate_ShouldAddExistingSpecializationToModelAndRenderSpecializationForm() throws Exception {
         given(specializationService.findById(1)).willReturn(specialization);
 
-        mvc.perform(get("/specs/showFormForUpdate").param("specId", "1"))
+        mvc.perform(get("/specs/showFormForUpdate")
+                .param("specId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/specializations/spec-form"))
                 .andExpect(model().attribute("specialization", hasProperty("id", is(specialization.getId()))))
@@ -184,7 +184,7 @@ public class SpecializationControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldThrowNotFoundExceptionWhenWrongIdPassed() throws Exception{
+    public void showFormForUpdate_ShouldThrowNotFoundException_WhenWrongIdPassed() throws Exception{
         when(specializationService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
@@ -193,7 +193,9 @@ public class SpecializationControllerTest {
          */
         specializationService.findById(-1);
 
-        mvc.perform(get("/specs/showFormForUpdate").param("specId", "-1"))
+        mvc.perform(get("/specs/showFormForUpdate")
+                .param("specId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(specializationService, times(2)).findById(-1);
@@ -206,7 +208,9 @@ public class SpecializationControllerTest {
         doNothing().when(specializationService).save(specialization);
 
         mvc.perform(post("/specs/save")
-                    .with(csrf()).flashAttr("specialization", specialization))
+                .with(csrf())
+                .flashAttr("specialization", specialization)
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/specs/list"));
         verify(specializationService, times(1)).save(isA(InformationSpecialization.class));
@@ -215,11 +219,12 @@ public class SpecializationControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveSpecializationAndReturnFormView() throws Exception {
+    public void save_ShouldNotSaveSpecializationAndReturnFormView_WhenFormContainsErrors() throws Exception {
         doNothing().when(specializationService).save(isA(InformationSpecialization.class));
 
         mvc.perform(post("/specs/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("specialization", 2))
                 .andExpect(model().attributeHasFieldErrors("specialization", "startDate"))
@@ -234,7 +239,8 @@ public class SpecializationControllerTest {
         doNothing().when(specializationService).deleteById(1);
 
         mvc.perform(get("/specs/delete")
-                    .param("specId", "1"))
+                .param("specId", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/specs/list"));
         verify(specializationService, times(1)).deleteById(1);
@@ -243,7 +249,7 @@ public class SpecializationControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void delete_ShouldNotDeleteField_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void delete_ShouldNotDeleteFieldThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(specializationService).deleteById(-1);
 
         /*
@@ -253,7 +259,8 @@ public class SpecializationControllerTest {
         specializationService.deleteById(-1);
 
         mvc.perform(get("/specs/delete")
-                .param("specId", "-1"))
+                .param("specId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(specializationService, times(2)).deleteById(-1);
@@ -269,24 +276,31 @@ public class SpecializationControllerTest {
 
         mvc.perform(get("/specs/list"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/specs/showFormForAdd").param("specKindId", "1"))
+        mvc.perform(get("/specs/showFormForAdd")
+                .param("specKindId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(get("/specs/showFormForSelectSpec"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/specs/showFormForUpdate").param("specId", "1"))
+        mvc.perform(get("/specs/showFormForUpdate")
+                .param("specId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(post("/specs/save")
                 .with(csrf()))
                 .andExpect(status().isOk());
-        mvc.perform(get("/specs/delete").param("specId", "1"))
+        mvc.perform(get("/specs/delete")
+                .param("specId", "1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
-    public void givenStudentOrEmployeeAuthRequestOnSessionService_shouldSucceedWith403_ListShouldGive200() throws Exception {
+    public void givenStudentOrEmployeeAuthRequestOnSessionServiceList_ShouldGive200() throws Exception {
         mvc.perform(get("/specs/list"))
                 .andExpect(status().isOk());
+    }
+    @Test
+    @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
+    public void givenStudentOrEmployeeAuthRequestOnSessionService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/specs/showFormForAdd"))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/specs/showFormForUpdate"))

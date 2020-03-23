@@ -26,7 +26,6 @@ public class SessionRepositoryTest {
 
     @Before
     public void setUp(){
-
         marc = new Student("Marek", "Nowak", "marek@gmail.com", 1, null);
         entityManager.persistAndFlush(marc);
 
@@ -38,7 +37,6 @@ public class SessionRepositoryTest {
 
     @Test
     public void whenFindByStudentAndSemester_ThenReturnSession() {
-
         Session foundSession = sessionRepository.findByStudentIdAndSemester(marc.getId(), session.getSemester());
         assertThat(foundSession.getId()).isEqualTo(session.getId());
     }

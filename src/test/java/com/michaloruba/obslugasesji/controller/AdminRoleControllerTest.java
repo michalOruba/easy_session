@@ -7,6 +7,7 @@ import com.michaloruba.obslugasesji.entity.Role;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
 import com.michaloruba.obslugasesji.service.RoleService;
 import com.michaloruba.obslugasesji.service.UserService;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,18 @@ public class AdminRoleControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    private static Role role;
+    private static List<Role> roles;
+    @BeforeClass
+    public static void setUp(){
+        role = new Role("ROLE_TESTER");
+        role.setId(1);
+        roles = Arrays.asList(role);
+    }
+
     @Test
     @WithMockUser(roles = "ADMIN")
     public void list_ShouldAddRoleEntriesToModelAndRenderRolesListView() throws Exception {
-        Role role = new Role("ROLE_TESTER");
-        List<Role> roles = Arrays.asList(role);
-
         given(roleService.findAll()).willReturn(roles);
 
         mvc.perform(get("/admin/roles/list"))
@@ -61,7 +68,6 @@ public class AdminRoleControllerTest {
                                 hasProperty("name", is("ROLE_TESTER"))
                         )
                 )));
-
         verify(roleService, times(1)).findAll();
         verifyNoMoreInteractions(roleService);
     }
@@ -80,12 +86,11 @@ public class AdminRoleControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void showFormForUpdate_ShouldAddExistingRoleAndRenderRoleForm() throws Exception {
-        Role role = new Role("ROLE_TESTER");
-        role.setId(1);
-
         given(roleService.findById(1)).willReturn(role);
 
-        mvc.perform(get("/admin/roles/showFormForUpdate").param("roleId", "1"))
+        mvc.perform(get("/admin/roles/showFormForUpdate")
+                .param("roleId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/roles/role-form"))
                 .andExpect(model().attribute("role", hasProperty("id", is(1))))
@@ -97,17 +102,17 @@ public class AdminRoleControllerTest {
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
     public void showFormForUpdate_ShouldThrowNotFoundExceptionWhenWrongIdPassed() throws Exception{
-        Role role = new Role("ROLE_TESTER");
-        role.setId(-1);
         when(roleService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
          *   Method call added to perform NotFoundException.
          *   Exception was not thrown when mvc.perform was called.
          */
-        roleService.findById(role.getId());
+        roleService.findById(-1);
 
-        mvc.perform(get("/admin/roles/showFormForUpdate").param("roleId", "-1"))
+        mvc.perform(get("/admin/roles/showFormForUpdate")
+                .param("roleId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(roleService, times(2)).findById(-1);
@@ -117,15 +122,13 @@ public class AdminRoleControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void save_ShouldSaveRoleAndRedirectToRolesList() throws Exception {
-        Role role = new Role("ROLE_TESTER");
-        role.setId(1);
-
         doNothing().when(roleService).save(isA(Role.class));
 
         mvc.perform(post("/admin/roles/save")
                     .with(csrf())
                     .param("id", "" + role.getId())
-                    .param("name", role.getName()))
+                    .param("name", role.getName())
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/roles/list"));
         verify(roleService, times(1)).save(isA(Role.class));
@@ -134,11 +137,12 @@ public class AdminRoleControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveRoleAndReturnFormView() throws Exception {
+    public void save_ShouldNotSaveRoleAndReturnFormView_WhenFormContainsErrors() throws Exception {
         doNothing().when(roleService).save(isA(Role.class));
 
         mvc.perform(post("/admin/roles/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("role", 1))
                 .andExpect(model().attributeHasFieldErrors("role", "name"))
@@ -152,7 +156,8 @@ public class AdminRoleControllerTest {
         doNothing().when(roleService).deleteById(1);
 
         mvc.perform(get("/admin/roles/delete")
-                    .param("roleId", "1"))
+                    .param("roleId", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/roles/list"));
         verify(roleService, times(1)).deleteById(1);
@@ -161,7 +166,7 @@ public class AdminRoleControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void delete_ShouldNotDeleteUserThrowNotFoundExceptionAndRedirectToErrorPage() throws Exception {
+    public void delete_ShouldNotDeleteUserThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(roleService).deleteById(-1);
 
         /*
@@ -171,7 +176,8 @@ public class AdminRoleControllerTest {
         roleService.deleteById(-1);
 
         mvc.perform(get("/admin/roles/delete")
-                .param("roleId", "-1"))
+                .param("roleId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(roleService, times(2)).deleteById(-1);
@@ -197,7 +203,7 @@ public class AdminRoleControllerTest {
 
     @Test
     @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
-    public void givenStudentOrEmployeeAuthRequestOnRoleService_shouldSucceedWith403() throws Exception {
+    public void givenStudentOrEmployeeAuthRequestOnRoleService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/admin/roles/list"))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/admin/roles/showFormForAdd"))

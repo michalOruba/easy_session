@@ -7,7 +7,6 @@ import com.michaloruba.obslugasesji.entity.InformationSpecialization;
 import com.michaloruba.obslugasesji.entity.Session;
 import com.michaloruba.obslugasesji.entity.Student;
 import com.michaloruba.obslugasesji.rest.NotFoundException;
-import com.michaloruba.obslugasesji.service.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +73,6 @@ public class SessionServiceTest {
         specialization.setEndDate(LocalDate.of(2021,5,1));
         specialization.setId(1);
 
-
         marc = new Student("Marek", "Nowak", "marek@gmail.com", 1, specialization);
         marc.setId(1);
 
@@ -138,7 +136,6 @@ public class SessionServiceTest {
 
     @Test
     public void whenFindByStudentAndSemester_ThenReturnSession() {
-
         Session foundSession = sessionService.findByStudentIdAndSemester(1,1);
         assertThat(foundSession.getId()).isEqualTo(1);
     }

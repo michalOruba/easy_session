@@ -40,7 +40,6 @@ public class SubjectServiceTest {
     private SubjectService subjectService;
     @MockBean
     private SubjectRepository subjectRepository;
-
     private Subject subject;
 
     @Before
@@ -52,9 +51,7 @@ public class SubjectServiceTest {
         subject.setSemester(1);
         subject.setSpecialization(null);
         subject.setId(1);
-
         Optional<Subject> testerSubject = Optional.of(subject);
-
 
         when(subjectRepository.findById(subject.getId()))
                 .thenReturn(testerSubject);

@@ -70,9 +70,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void list_ShouldAddRoleEntriesToModelAndRenderRolesListView() throws Exception {
-
-
+    public void list_ShouldAddUserEntriesToModelAndRenderUsersListView() throws Exception {
         given(userService.findAll()).willReturn(users);
 
         mvc.perform(get("/admin/users/list"))
@@ -95,10 +93,12 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldUpdateExistingUserAndRenderUserForm() throws Exception {
+    public void showFormForUpdate_ShouldAddExistingUserToModelAndRenderUserForm() throws Exception {
         given(userService.findByUserName("test")).willReturn(user);
 
-        mvc.perform(get("/admin/users/showFormForUpdate").param("userName", "test"))
+        mvc.perform(get("/admin/users/showFormForUpdate")
+                .param("userName", "test")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/users/user-form"));
         verify(userService, times(1)).findByUserName("test");
@@ -107,7 +107,7 @@ public class AdminUserControllerTest {
 
     @Test (expected = UsernameNotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldThrowUsernameNotFoundExceptionWhenWrongIdPassed() throws Exception{
+    public void showFormForUpdate_ShouldThrowUsernameNotFoundExceptionWhenWrongUserNamePassed() throws Exception{
         when(userService.findByUserName("NONAME")).thenThrow(UsernameNotFoundException.class);
 
         /*
@@ -116,7 +116,9 @@ public class AdminUserControllerTest {
          */
         userService.findByUserName("NONAME");
 
-        mvc.perform(get("/admin/users/showFormForUpdate").param("userName", "NONAME"))
+        mvc.perform(get("/admin/users/showFormForUpdate")
+                .param("userName", "NONAME")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(userService, times(2)).findByUserName("NONAME");
@@ -125,12 +127,13 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdateRole_ShouldUpdateExistingUsersRoleAndRenderUserRoleForm() throws Exception {
+    public void showFormForUpdateRole_ShouldAddExistingUsersRolesToModelAndRenderUserRoleForm() throws Exception {
         given(userService.findByUserName("test")).willReturn(user);
         given(roleService.findAll()).willReturn(roles);
 
         mvc.perform(get("/admin/users/showFormForUpdateRoles")
-                    .param("userName", "test"))
+                    .param("userName", "test")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/users/role-form"))
                 .andExpect(model().attribute("user", hasProperty("id", is(user.getId()))))
@@ -160,7 +163,9 @@ public class AdminUserControllerTest {
          */
         userService.findByUserName("NONAME");
 
-        mvc.perform(get("/admin/users/showFormForUpdateRole").param("userName", "NONAME"))
+        mvc.perform(get("/admin/users/showFormForUpdateRole")
+                .param("userName", "NONAME")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(userService, times(2)).findByUserName("NONAME");
@@ -169,7 +174,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldSaveUserAndRedirectToUsersList() throws Exception {
+    public void save_ShouldUpdateUserAndRedirectToUsersList() throws Exception {
         doNothing().when(userService).update(isA(User.class));
 
         mvc.perform(post("/admin/users/save")
@@ -186,20 +191,21 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveUserAndReturnUserFormView() throws Exception {
+    public void save_ShouldNotUpdateUserAndReturnUserFormView() throws Exception {
         doNothing().when(userService).update(isA(User.class));
 
         mvc.perform(post("/admin/users/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
-                .andExpect(model().attributeErrorCount("user", 4)) /* Two errors for email, one for firstName and one for lastName */
+                /* Two errors for email, one for firstName and one for lastName */
+                .andExpect(model().attributeErrorCount("user", 4))
                 .andExpect(model().attributeHasFieldErrors("user", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("user", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("user", "email"))
                 .andExpect(view().name("/users/user-form"));
         verifyNoInteractions(userService);
     }
-
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -211,7 +217,8 @@ public class AdminUserControllerTest {
         mvc.perform(post("/admin/users/saveRole")
                 .with(csrf())
                 .param("userName" ,user.getUserName())
-                .param("roles", "1"))
+                .param("roles", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/users/list"));
         verify(roleService, times(1)).findById(1);
@@ -229,7 +236,8 @@ public class AdminUserControllerTest {
 
         mvc.perform(post("/admin/users/saveRole")
                 .with(csrf())
-                .param("userName" ,user.getUserName()))
+                .param("userName" ,user.getUserName())
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/users/list"));
         verify(userService, times(1)).findByUserName("test");
@@ -240,7 +248,7 @@ public class AdminUserControllerTest {
 
     @Test (expected = UsernameNotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveUserRoleAndReturnUserFormView_whenUsernameNotFound() throws Exception {
+    public void save_ShouldNotSaveUserRoleAndThrowUsernameNotFoundException_whenWrongUsernamePassed() throws Exception {
         doNothing().when(userService).updateRoles(isA(User.class));
         when(userService.findByUserName("NONAME")).thenThrow(UsernameNotFoundException.class);
 
@@ -251,7 +259,8 @@ public class AdminUserControllerTest {
         userService.findByUserName("NONAME");
 
         mvc.perform(post("/admin/users/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(userService, times(2)).findByUserName("NONAME");
@@ -264,7 +273,8 @@ public class AdminUserControllerTest {
         doNothing().when(userService).deleteByUserName("test");
 
         mvc.perform(get("/admin/users/delete")
-                    .param("userName", "test"))
+                    .param("userName", "test")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/users/list"));
         verify(userService, times(1)).deleteByUserName("test");
@@ -273,7 +283,7 @@ public class AdminUserControllerTest {
 
     @Test (expected = UsernameNotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void delete_ShouldNotDeleteUserThrowNotFoundExceptionAndRedirectToErrorPage() throws Exception {
+    public void delete_ShouldNotDeleteUserThrowUsernameNotFoundExceptionAndRedirectToErrorPage() throws Exception {
         doThrow(UsernameNotFoundException.class).when(userService).deleteByUserName("NONAME");
 
         /*
@@ -283,7 +293,8 @@ public class AdminUserControllerTest {
         userService.deleteByUserName("NONAME");
 
         mvc.perform(get("/admin/users/delete")
-                .param("userName", "NONAME"))
+                .param("userName", "NONAME")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(userService, times(2)).deleteByUserName("NONAME");
@@ -307,7 +318,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
-    public void givenStudentOrEmployeeAuthRequestOnRoleService_shouldSucceedWith403() throws Exception {
+    public void givenStudentOrEmployeeAuthRequestOnRoleService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/admin/users/list"))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/admin/users/showFormForUpdateRoles"))

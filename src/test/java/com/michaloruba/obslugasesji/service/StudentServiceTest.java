@@ -105,7 +105,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void whenFindAll_ThenReturnList() {
+    public void whenFindAll_ThenReturnListOfStudents() {
         List<Student> students = studentService.findAll();
         assertThat(students.size()).isEqualTo(1);
     }

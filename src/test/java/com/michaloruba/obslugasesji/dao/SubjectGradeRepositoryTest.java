@@ -22,12 +22,9 @@ public class SubjectGradeRepositoryTest {
 
     @Autowired
     private SubjectGradeRepository subjectGradeRepository;
-
     @Autowired
     private TestEntityManager entityManager;
-
     private Session session;
-    private Subject subject;
     private SubjectGrade subjectGrade;
 
     @Before
@@ -37,7 +34,7 @@ public class SubjectGradeRepositoryTest {
         session.setStudent(null);
         entityManager.persistAndFlush(session);
 
-        subject = new Subject();
+        Subject subject = new Subject();
         subject.setECTS(5);
         subject.setHours(60);
         subject.setName("Java");

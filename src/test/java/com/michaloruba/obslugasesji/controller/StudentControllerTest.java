@@ -55,7 +55,6 @@ public class StudentControllerTest {
     private MockMvc mvc;
 
     private static Session session;
-    private static List<Session> sessions;
     private static Student student;
     private static List<Student> students;
     private static InformationSpecialization specialization;
@@ -70,7 +69,6 @@ public class StudentControllerTest {
         specKind.setId(1);
         specKind.setName("Programming");
         specKind.setFieldOfStudy(fieldOfStudy);
-        List<SpecKind> specKinds = Arrays.asList(specKind);
 
         specialization = new InformationSpecialization();
         specialization.setId(1);
@@ -91,7 +89,6 @@ public class StudentControllerTest {
         session = new Session(student, 1);
         session.setId(1);
         session.setStudent(student);
-        sessions = Arrays.asList(session);
     }
 
     @Test
@@ -119,7 +116,7 @@ public class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForAdd_ShouldAddEmptyStudentAndRenderStudentForm() throws Exception {
+    public void showFormForAdd_ShouldAddEmptyStudentToModelAndRenderStudentForm() throws Exception {
         when(specializationService.findAll()).thenReturn(specializations);
 
         mvc.perform(get("/students/showFormForAdd"))
@@ -147,11 +144,13 @@ public class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldAddExistingStudentAndRenderStudentForm() throws Exception {
+    public void showFormForUpdate_ShouldAddExistingStudentToModelAndRenderStudentForm() throws Exception {
         given(studentService.findById(1)).willReturn(student);
         when(specializationService.findAll()).thenReturn(specializations);
 
-        mvc.perform(get("/students/showFormForUpdate").param("studentId", "1"))
+        mvc.perform(get("/students/showFormForUpdate")
+                .param("studentId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/students/student-form"))
                 .andExpect(model().attribute("student", hasProperty("id", is(student.getId()))))
@@ -177,7 +176,7 @@ public class StudentControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldThrowNotFoundExceptionWhenWrongIdPassed() throws Exception{
+    public void showFormForUpdate_ShouldThrowNotFoundException_WhenWrongIdPassed() throws Exception{
         when(studentService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
@@ -186,7 +185,9 @@ public class StudentControllerTest {
          */
         studentService.findById(-1);
 
-        mvc.perform(get("/students/showFormForUpdate").param("studentId", "-1"))
+        mvc.perform(get("/students/showFormForUpdate")
+                .param("studentId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(studentService, times(2)).findById(-1);
@@ -213,7 +214,7 @@ public class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveStudentAndReturnFormViewIfErrorOccurs() throws Exception {
+    public void save_ShouldNotSaveStudentAndReturnFormView_WhenFormContainsErrors() throws Exception {
         doNothing().when(studentService).save(isA(Student.class));
         when(specializationService.findById(-1)).thenThrow(NotFoundException.class);
 
@@ -234,7 +235,7 @@ public class StudentControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveStudentWhenSpecializationIsNotFound_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void save_ShouldNotSaveStudentThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         when(specializationService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
@@ -244,7 +245,8 @@ public class StudentControllerTest {
         specializationService.findById(-1);
 
         mvc.perform(get("/students/save")
-                .param("specId", "-1"))
+                .param("specId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(specializationService, times(2)).save(isA(InformationSpecialization.class));
@@ -257,7 +259,8 @@ public class StudentControllerTest {
         doNothing().when(studentService).deleteById(1);
 
         mvc.perform(get("/students/delete")
-                    .param("studentId", "1"))
+                    .param("studentId", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/students/list"));
         verify(studentService, times(1)).deleteById(1);
@@ -266,7 +269,7 @@ public class StudentControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void delete_ShouldNotDeleteStudent_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void delete_ShouldNotDeleteStudentThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(studentService).deleteById(-1);
 
         /*
@@ -276,7 +279,8 @@ public class StudentControllerTest {
         studentService.deleteById(-1);
 
         mvc.perform(get("/students/delete")
-                .param("studentId", "-1"))
+                .param("studentId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(studentService, times(2)).deleteById(-1);
@@ -319,7 +323,7 @@ public class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void search_shouldNotFindStudentByWrongUsernameAddEmptyListToModelAndReturnStudentsList() throws Exception {
+    public void search_shouldNotFindStudentAddEmptyListToModelAndReturnStudentsList_WhenWrongUsernamePassed() throws Exception {
         when(studentService.searchForStudent("WRONGUSERNAME")).thenReturn(Collections.emptyList());
 
         mvc.perform(post("/students/search")
@@ -335,7 +339,7 @@ public class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void search_shouldNotFindStudentByWrongIdAddEmptyListToModelAndReturnStudentsList() throws Exception {
+    public void search_shouldNotFindStudentAddEmptyListToModelAndReturnStudentsList_WhenWrongIdPassed() throws Exception {
         when(studentService.searchForStudent(-1)).thenReturn(Collections.emptyList());
 
         mvc.perform(post("/students/search")
@@ -351,11 +355,13 @@ public class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showSessionDetails_shouldFindStudentsSession_AndRedirectToSessionDetailView() throws Exception {
+    public void showSessionDetails_shouldFindStudentsSessionAndRedirectToSessionDetailView() throws Exception {
         when(studentService.findById(1)).thenReturn(student);
         when(sessionService.findByStudentIdAndSemester(student.getId(), student.getSemester())).thenReturn(session);
 
-        mvc.perform(get("/students/showSessionDetails").param("studentId", "1"))
+        mvc.perform(get("/students/showSessionDetails")
+                .param("studentId", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/grades/showSessionDetails?sessionId=" + session.getId()));
         verify(studentService, times(1)).findById(1);
@@ -366,12 +372,14 @@ public class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showSessionDetails_shouldAddErrorMessageListOfStudentsAndReturnStudentList_WhenSessionIsNull() throws Exception {
+    public void showSessionDetails_shouldAddErrorMessageListOfStudentsAndReturnStudentList_WhenSessionIsNotFound() throws Exception {
         when(studentService.findById(1)).thenReturn(student);
         when(studentService.findAll()).thenReturn(students);
         when(sessionService.findByStudentIdAndSemester(student.getId(), student.getSemester())).thenReturn(null);
 
-        mvc.perform(get("/students/showSessionDetails").param("studentId", "1"))
+        mvc.perform(get("/students/showSessionDetails")
+                .param("studentId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/students/students-list"))
                 .andExpect(model().attribute("errorMessage", "Sorry, no active session was found for this Student"))
@@ -397,41 +405,57 @@ public class StudentControllerTest {
 
         mvc.perform(get("/students/list"))
                 .andExpect(status().isOk());
-        mvc.perform(post("/students/search").param("usernameOrId","1").with(csrf()))
+        mvc.perform(post("/students/search")
+                .param("usernameOrId","1")
+                .with(csrf()))
                 .andExpect(status().isOk());
-        mvc.perform(get("/students/showSessionDetails").param("studentId", "1"))
+        mvc.perform(get("/students/showSessionDetails")
+                .param("studentId", "1"))
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/students/showFormForAdd"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/students/showFormForUpdate").param("studentId", "1"))
+        mvc.perform(get("/students/showFormForUpdate")
+                .param("studentId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(post("/students/save")
                 .param("specId", "1")
                 .with(csrf()))
                 .andExpect(status().isOk());
-        mvc.perform(get("/students/delete").param("studentId", "1"))
+        mvc.perform(get("/students/delete")
+                .param("studentId", "1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
-    public void givenStudentOrEmployeeAuthRequestOnStudentService_shouldSucceedWith403_ListSearchAndSessionDetailsShouldGive200() throws Exception {
+    public void givenStudentOrEmployeeAuthRequestOnStudentServiceListSearchAndSessionDetails_shouldSucceedWith200() throws Exception {
         given(studentService.searchForStudent(1)).willReturn(students);
         given(studentService.findById(1)).willReturn(student);
         given(sessionService.findByStudentIdAndSemester(student.getId(), student.getSemester())).willReturn(session);
 
         mvc.perform(get("/students/list"))
                 .andExpect(status().isOk());
-        mvc.perform(post("/students/search").param("usernameOrId","1").with(csrf()))
+        mvc.perform(post("/students/search")
+                .param("usernameOrId","1")
+                .with(csrf()))
                 .andExpect(status().isOk());
-        mvc.perform(get("/students/showSessionDetails").param("studentId", "1"))
+        mvc.perform(get("/students/showSessionDetails")
+                .param("studentId", "1"))
                 .andExpect(status().is3xxRedirection());
+    }
+    @Test
+    @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
+    public void givenStudentOrEmployeeAuthRequestOnStudentService_shouldFailedWith403() throws Exception {
+        given(studentService.searchForStudent(1)).willReturn(students);
+        given(studentService.findById(1)).willReturn(student);
+        given(sessionService.findByStudentIdAndSemester(student.getId(), student.getSemester())).willReturn(session);
+
         mvc.perform(get("/students/showFormForAdd"))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/students/showFormForUpdate"))
                 .andExpect(status().isForbidden());
         mvc.perform(post("/students/save")
-                    .with(csrf()))
+                .with(csrf()))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/students/delete"))
                 .andExpect(status().isForbidden());

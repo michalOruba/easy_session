@@ -1,6 +1,5 @@
 package com.michaloruba.obslugasesji.dao;
 
-import com.michaloruba.obslugasesji.dao.RoleRepository;
 import com.michaloruba.obslugasesji.entity.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;

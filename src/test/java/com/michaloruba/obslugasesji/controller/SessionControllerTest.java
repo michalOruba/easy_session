@@ -95,7 +95,7 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForAdd_ShouldAddEmptySessionAndRenderSessionForm() throws Exception {
+    public void showFormForAdd_ShouldAddEmptySessionToModelAndRenderSessionForm() throws Exception {
         when(studentService.findAll()).thenReturn(students);
 
         mvc.perform(get("/sessions/showFormForAdd"))
@@ -120,11 +120,13 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldAddExistingSessionAndRenderSessionForm() throws Exception {
+    public void showFormForUpdate_ShouldAddExistingSessionToModelAndRenderSessionForm() throws Exception {
         given(sessionService.findById(1)).willReturn(session);
         when(studentService.findAll()).thenReturn(students);
 
-        mvc.perform(get("/sessions/showFormForUpdate").param("sessionId", "1"))
+        mvc.perform(get("/sessions/showFormForUpdate")
+                .param("sessionId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/sessions/session-form"))
                 .andExpect(model().attribute("mySession", hasProperty("id", is(1))))
@@ -136,7 +138,8 @@ public class SessionControllerTest {
                                 hasProperty("firstName", is(student.getFirstName())),
                                 hasProperty("lastName", is(student.getLastName())),
                                 hasProperty("email", is(student.getEmail())),
-                                hasProperty("semester", is(student.getSemester()))                        )
+                                hasProperty("semester", is(student.getSemester()))
+                        )
                 )));
         verify(sessionService, times(1)).findById(1);
         verifyNoMoreInteractions(sessionService);
@@ -146,7 +149,7 @@ public class SessionControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldThrowNotFoundExceptionWhenWrongIdPassed() throws Exception{
+    public void showFormForUpdate_ShouldThrowNotFoundException_WhenWrongIdPassed() throws Exception{
         when(sessionService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
@@ -155,7 +158,9 @@ public class SessionControllerTest {
          */
         sessionService.findById(-1);
 
-        mvc.perform(get("/fields/showFormForUpdate").param("sessionId", "-1"))
+        mvc.perform(get("/fields/showFormForUpdate")
+                .param("sessionId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(sessionService, times(2)).findById(-1);
@@ -169,7 +174,9 @@ public class SessionControllerTest {
         when(studentService.findById(anyInt())).thenReturn(student);
 
         mvc.perform(post("/sessions/save")
-                    .with(csrf()).flashAttr("mySession", session))
+                .with(csrf())
+                .flashAttr("mySession", session)
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/sessions/list"));
         verify(sessionService, times(1)).save(isA(Session.class));
@@ -178,11 +185,12 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveSessionAndReturnFormView() throws Exception {
+    public void save_ShouldNotSaveSessionAndReturnFormView_WhenFormContainsErrors() throws Exception {
         doNothing().when(sessionService).save(isA(Session.class));
 
         mvc.perform(post("/sessions/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("mySession", 2))
                 .andExpect(model().attributeHasFieldErrors("mySession", "semester"))
@@ -193,7 +201,7 @@ public class SessionControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveFieldWhenStudentIsNull_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void save_ShouldNotSaveFieldThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(studentService).findById(-1);
 
         /*
@@ -203,7 +211,8 @@ public class SessionControllerTest {
         studentService.findById(-1);
 
         mvc.perform(get("/sessions/save")
-                .param("sessionId", "1"))
+                .param("sessionId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(studentService, times(2)).deleteById(-1);
@@ -216,7 +225,8 @@ public class SessionControllerTest {
         doNothing().when(sessionService).deleteById(1);
 
         mvc.perform(get("/sessions/delete")
-                    .param("sessionId", "1"))
+                    .param("sessionId", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/sessions/list"));
         verify(sessionService, times(1)).deleteById(1);
@@ -225,7 +235,7 @@ public class SessionControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void delete_ShouldNotDeleteField_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void delete_ShouldNotDeleteFieldThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(sessionService).deleteById(-1);
 
         /*
@@ -235,7 +245,8 @@ public class SessionControllerTest {
         sessionService.deleteById(-1);
 
         mvc.perform(get("/sessions/delete")
-                .param("sessionId", "-1"))
+                .param("sessionId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(sessionService, times(2)).deleteById(-1);
@@ -245,35 +256,42 @@ public class SessionControllerTest {
 
     @Test
     @WithMockUser(roles = "OWNER")
-    public void givenOwnerAuthRequestOnSessionService_shouldSucceedWith200() throws Exception {
+    public void givenOwnerAuthRequestOnSessionService_shouldSucceedWith200Or3xx() throws Exception {
         given(sessionService.findById(1)).willReturn(session);
 
         mvc.perform(get("/sessions/list"))
                 .andExpect(status().isOk());
         mvc.perform(get("/sessions/showFormForAdd"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/sessions/showFormForUpdate").param("sessionId", "1"))
+        mvc.perform(get("/sessions/showFormForUpdate")
+                .param("sessionId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(post("/sessions/save")
                 .with(csrf()))
                 .andExpect(status().isOk());
-        mvc.perform(get("/sessions/delete").param("sessionId", "1"))
+        mvc.perform(get("/sessions/delete")
+                .param("sessionId", "1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
-    public void givenStudentOrEmployeeAuthRequestOnSessionService_shouldSucceedWith403_ListShouldGive200() throws Exception {
-        mvc.perform(get("/sessions/list"))
-                .andExpect(status().isOk());
+    public void givenStudentOrEmployeeAuthRequestOnSessionService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/sessions/showFormForAdd"))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/sessions/showFormForUpdate"))
                 .andExpect(status().isForbidden());
         mvc.perform(post("/sessions/save")
-                    .with(csrf()))
+                .with(csrf()))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/sessions/delete"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
+    public void givenStudentOrEmployeeAuthRequestOnSessionService_ShouldSucceedWith200ForList() throws Exception {
+        mvc.perform(get("/sessions/list"))
+                .andExpect(status().isOk());
     }
 }

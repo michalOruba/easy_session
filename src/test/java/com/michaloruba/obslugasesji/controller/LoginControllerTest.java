@@ -44,7 +44,8 @@ public class LoginControllerTest {
     }
     @Test
     public void givenRequestOnLoginControllerPostAccessDenied_shouldSucceedWith200() throws Exception {
-        mvc.perform(post("/access-denied").with(csrf()))
+        mvc.perform(post("/access-denied")
+                .with(csrf()))
                 .andExpect(status().isOk());
     }
 }

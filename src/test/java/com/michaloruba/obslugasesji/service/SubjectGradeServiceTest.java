@@ -37,7 +37,6 @@ public class SubjectGradeServiceTest {
     private SubjectGradeService subjectGradeService;
     @MockBean
     private SubjectGradeRepository subjectGradeRepository;
-
     private Session session;
 
     @Before

@@ -23,14 +23,11 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private TestEntityManager entityManager;
-
     private User user;
-    private  Role role;
 
     @Before
     public void setUp(){
-        role = new Role();
-        role.setName("ROLE_STUDENT");
+        Role role = new Role("ROLE_STUDENT");
         entityManager.persistAndFlush(role);
 
         Collection<Role> roles = new ArrayList<>();
@@ -47,26 +44,26 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void whenFindByUserName_ThanReturnUser(){
+    public void whenFindByUserName_ThenReturnUser(){
         User foundUser = userRepository.findByUserName(user.getUserName());
         assertThat(foundUser.getUserName()).isEqualTo(user.getUserName());
     }
 
     @Test
-    public void whenFindByWrongUserName_ThanReturnNull(){
+    public void whenFindByWrongUserName_ThenReturnNull(){
         User foundUser = userRepository.findByUserName("Josh");
         assertThat(foundUser).isNull();
     }
 
     @Test
-    public void whenDeleteByUserName_ThanFindByUserNameIsNull(){
+    public void whenDeleteByUserName_ThenFindByUserNameReturnsNull(){
         userRepository.deleteByUserName(user.getUserName());
         User foundUser = userRepository.findByUserName(user.getUserName());
         assertThat(foundUser).isNull();
     }
 
     @Test
-    public void whenDeleteByWrongUserName_ThanFindByUserNameReturnsUser(){
+    public void whenDeleteByWrongUserName_ThenExistingUserIsNotDeleted(){
         userRepository.deleteByUserName("Josh");
         User foundUser = userRepository.findByUserName(user.getUserName());
         assertThat(foundUser.getUserName()).isEqualTo(user.getUserName());

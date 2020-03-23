@@ -57,8 +57,6 @@ public class FieldOfStudyControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void list_ShouldAddFieldEntriesToModelAndRenderFieldsListView() throws Exception {
-
-
         given(fieldOfStudyService.findAll()).willReturn(fields);
 
         mvc.perform(get("/fields/list"))
@@ -77,7 +75,7 @@ public class FieldOfStudyControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForAdd_ShouldAddEmptyFieldAndRenderFieldForm() throws Exception {
+    public void showFormForAdd_ShouldAddEmptyFieldToModelAndRenderFieldForm() throws Exception {
         mvc.perform(get("/fields/showFormForAdd"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/fields/field-form"))
@@ -88,10 +86,12 @@ public class FieldOfStudyControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldAddExistingFieldAndRenderRoleForm() throws Exception {
+    public void showFormForUpdate_ShouldAddExistingFieldToModelAndRenderRoleForm() throws Exception {
         given(fieldOfStudyService.findById(1)).willReturn(fieldOfStudy);
 
-        mvc.perform(get("/fields/showFormForUpdate").param("fieldId", "1"))
+        mvc.perform(get("/fields/showFormForUpdate")
+                .param("fieldId", "1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/fields/field-form"))
                 .andExpect(model().attribute("fieldOfStudy", hasProperty("id", is(1))))
@@ -102,7 +102,7 @@ public class FieldOfStudyControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void showFormForUpdate_ShouldThrowNotFoundExceptionWhenWrongIdPassed() throws Exception{
+    public void showFormForUpdate_ShouldThrowNotFoundException_WhenWrongIdPassed() throws Exception{
         when(fieldOfStudyService.findById(-1)).thenThrow(NotFoundException.class);
 
         /*
@@ -111,7 +111,9 @@ public class FieldOfStudyControllerTest {
          */
         fieldOfStudyService.findById(-1);
 
-        mvc.perform(get("/fields/showFormForUpdate").param("fieldId", "-1"))
+        mvc.perform(get("/fields/showFormForUpdate")
+                .param("fieldId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(fieldOfStudyService, times(2)).findById(-1);
@@ -126,7 +128,8 @@ public class FieldOfStudyControllerTest {
         mvc.perform(post("/fields/save")
                     .with(csrf())
                     .param("id", "" + fieldOfStudy.getId())
-                    .param("name", fieldOfStudy.getName()))
+                    .param("name", fieldOfStudy.getName())
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/fields/list"));
         verify(fieldOfStudyService, times(1)).save(isA(FieldOfStudy.class));
@@ -135,11 +138,12 @@ public class FieldOfStudyControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void save_ShouldNotSaveFieldAndReturnFormView() throws Exception {
+    public void save_ShouldNotSaveFieldAndReturnFormView_WhenFormContainsErrors() throws Exception {
         doNothing().when(fieldOfStudyService).save(isA(FieldOfStudy.class));
 
         mvc.perform(post("/fields/save")
-                .with(csrf()))
+                .with(csrf())
+        )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("fieldOfStudy", 1))
                 .andExpect(model().attributeHasFieldErrors("fieldOfStudy", "name"))
@@ -153,7 +157,8 @@ public class FieldOfStudyControllerTest {
         doNothing().when(fieldOfStudyService).deleteById(1);
 
         mvc.perform(get("/fields/delete")
-                    .param("fieldId", "1"))
+                    .param("fieldId", "1")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/fields/list"));
         verify(fieldOfStudyService, times(1)).deleteById(1);
@@ -162,7 +167,7 @@ public class FieldOfStudyControllerTest {
 
     @Test (expected = NotFoundException.class)
     @WithMockUser(roles = "ADMIN")
-    public void delete_ShouldNotDeleteField_ThrowNotFoundException_AndRedirectToErrorPage() throws Exception {
+    public void delete_ShouldNotDeleteFieldThrowNotFoundExceptionAndRedirectToErrorPage_WhenWrongIdPassed() throws Exception {
         doThrow(NotFoundException.class).when(fieldOfStudyService).deleteById(-1);
 
         /*
@@ -172,35 +177,37 @@ public class FieldOfStudyControllerTest {
         fieldOfStudyService.deleteById(-1);
 
         mvc.perform(get("/fields/delete")
-                .param("fieldId", "-1"))
+                .param("fieldId", "-1")
+        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error-404"));
         verify(fieldOfStudyService, times(2)).deleteById(-1);
         verifyNoMoreInteractions(fieldOfStudyService);
     }
 
-
     @Test
     @WithMockUser(roles = "OWNER")
-    public void givenOwnerAuthRequestOnFieldsService_shouldSucceedWith200() throws Exception {
+    public void givenOwnerAuthRequestOnFieldsService_shouldSucceedWith200Or3xx() throws Exception {
         given(fieldOfStudyService.findById(1)).willReturn(fieldOfStudy);
 
         mvc.perform(get("/fields/list"))
                 .andExpect(status().isOk());
         mvc.perform(get("/fields/showFormForAdd"))
                 .andExpect(status().isOk());
-        mvc.perform(get("/fields/showFormForUpdate").param("fieldId", "1"))
+        mvc.perform(get("/fields/showFormForUpdate")
+                .param("fieldId", "1"))
                 .andExpect(status().isOk());
         mvc.perform(post("/fields/save")
                 .with(csrf()))
                 .andExpect(status().isOk());
-        mvc.perform(get("/fields/delete").param("fieldId", "1"))
+        mvc.perform(get("/fields/delete")
+                .param("fieldId", "1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     @WithMockUser(roles = {"STUDENT", "EMPLOYEE"})
-    public void givenStudentOrEmployeeAuthRequestOnFieldOfStudyService_shouldSucceedWith403() throws Exception {
+    public void givenStudentOrEmployeeAuthRequestOnFieldOfStudyService_shouldFailedWith403() throws Exception {
         mvc.perform(get("/fields/list"))
                 .andExpect(status().isOk());
         mvc.perform(get("/fields/showFormForAdd"))
@@ -208,7 +215,7 @@ public class FieldOfStudyControllerTest {
         mvc.perform(get("/fields/showFormForUpdate"))
                 .andExpect(status().isForbidden());
         mvc.perform(post("/fields/save")
-                    .with(csrf()))
+                .with(csrf()))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/fields/delete"))
                 .andExpect(status().isForbidden());
