@@ -98,7 +98,7 @@ public class StudentControllerTest {
 
         mvc.perform(get("/students/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/students-list"))
+                .andExpect(view().name("students/students-list"))
                 .andExpect(model().attribute("students", hasSize(1)))
                 .andExpect(model().attribute("students", hasItem(
                         allOf(
@@ -121,7 +121,7 @@ public class StudentControllerTest {
 
         mvc.perform(get("/students/showFormForAdd"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/student-form"))
+                .andExpect(view().name("students/student-form"))
                 .andExpect(model().attribute("student", hasProperty("id", is(0))))
                 .andExpect(model().attribute("student", hasProperty("firstName", nullValue())))
                 .andExpect(model().attribute("student", hasProperty("lastName", nullValue())))
@@ -152,7 +152,7 @@ public class StudentControllerTest {
                 .param("studentId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/student-form"))
+                .andExpect(view().name("students/student-form"))
                 .andExpect(model().attribute("student", hasProperty("id", is(student.getId()))))
                 .andExpect(model().attribute("student", hasProperty("firstName", is(student.getFirstName()))))
                 .andExpect(model().attribute("student", hasProperty("lastName", is(student.getLastName()))))
@@ -229,7 +229,7 @@ public class StudentControllerTest {
                 .andExpect(model().attributeHasFieldErrors("student", "email"))
                 .andExpect(model().attributeHasFieldErrors("student", "specialization"))
                 .andExpect(model().attributeHasFieldErrors("student", "semester"))
-                .andExpect(view().name("/students/student-form"));
+                .andExpect(view().name("students/student-form"));
         verifyNoInteractions(studentService);
     }
 
@@ -297,7 +297,7 @@ public class StudentControllerTest {
                         .with(csrf())
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/students-list"))
+                .andExpect(view().name("students/students-list"))
                 .andExpect(model().attribute("students", hasSize(1)))
                 .andExpect(model().attribute("students", students));
         verify(studentService, times(1)).searchForStudent(1);
@@ -314,7 +314,7 @@ public class StudentControllerTest {
                 .with(csrf())
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/students-list"))
+                .andExpect(view().name("students/students-list"))
                 .andExpect(model().attribute("students", hasSize(1)))
                 .andExpect(model().attribute("students", students));
         verify(studentService, times(1)).searchForStudent("oh");
@@ -331,7 +331,7 @@ public class StudentControllerTest {
                 .with(csrf())
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/students-list"))
+                .andExpect(view().name("students/students-list"))
                 .andExpect(model().attribute("students", hasSize(0)));
         verify(studentService, times(1)).searchForStudent("WRONGUSERNAME");
         verifyNoMoreInteractions(studentService);
@@ -347,7 +347,7 @@ public class StudentControllerTest {
                 .with(csrf())
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/students-list"))
+                .andExpect(view().name("students/students-list"))
                 .andExpect(model().attribute("students", hasSize(0)));
         verify(studentService, times(1)).searchForStudent(-1);
         verifyNoMoreInteractions(studentService);
@@ -381,7 +381,7 @@ public class StudentControllerTest {
                 .param("studentId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/students/students-list"))
+                .andExpect(view().name("students/students-list"))
                 .andExpect(model().attribute("errorMessage", "Sorry, no active session was found for this Student"))
                 .andExpect(model().attribute("students", students));
 

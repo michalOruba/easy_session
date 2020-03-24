@@ -37,13 +37,13 @@ public class AdminUserController {
     @GetMapping("/list")
     public String showListOfUsers(Model model){
         model.addAttribute("users", userService.findAll());
-        return "/users/users-list";
+        return "users/users-list";
     }
 
     @PostMapping("/save")
     public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "/users/user-form";
+            return "users/user-form";
         }
         userService.update(user);
         return "redirect:/admin/users/list";
@@ -54,9 +54,9 @@ public class AdminUserController {
         try {
             model.addAttribute("user", userService.findByUserName(userName));
         } catch (UsernameNotFoundException e){
-            return "/error-404";
+            return "error-404";
         }
-        return "/users/user-form";
+        return "users/user-form";
     }
 
     @GetMapping("/delete")
@@ -69,7 +69,7 @@ public class AdminUserController {
     public String showFormForUpdateRoles(@RequestParam("userName") String userName, Model model){
         model.addAttribute("roles", roleService.findAll());
         model.addAttribute("user", userService.findByUserName(userName));
-        return "/users/role-form";
+        return "users/role-form";
     }
 
     @PostMapping("saveRole")
@@ -84,7 +84,7 @@ public class AdminUserController {
                 }
             }
         } catch (UsernameNotFoundException e){
-            return "/error-404";
+            return "error-404";
         }
         user.setRoles(usersRoles);
         userService.updateRoles(user);

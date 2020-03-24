@@ -38,7 +38,19 @@ mvnw.cmd
 
 ### application.properties
 src/main/resources/application.properties
+src/main/resources/application-demo.properties
+
 
 ### logs
 
 logs
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# AWS files
+out
+aws-elastic-beanstalk-cli-setup
+

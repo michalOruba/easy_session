@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Specialization form</title>
-    <th:block th:insert="/fragments/header.html :: headerfiles"/>
+    <th:block th:insert="fragments/header.html :: headerfiles"/>
 </head>
 <body>
 <div class="container">
@@ -33,7 +33,7 @@
 
     <hr>
     <a th:href="@{/specs/list}">Back to specializations list</a>
-    <div th:replace="/fragments/footer.html :: footer"> </div>
+    <div th:replace="fragments/footer.html::footer"> </div>
 </div>
 </body>
 </html>

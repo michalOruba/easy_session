@@ -61,7 +61,7 @@ public class AdminRoleControllerTest {
 
         mvc.perform(get("/admin/roles/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/roles/roles-list"))
+                .andExpect(view().name("roles/roles-list"))
                 .andExpect(model().attribute("roles", hasSize(1)))
                 .andExpect(model().attribute("roles", hasItem(
                         allOf(
@@ -77,7 +77,7 @@ public class AdminRoleControllerTest {
     public void showFormForAdd_ShouldAddEmptyRoleAndRenderRoleForm() throws Exception {
         mvc.perform(get("/admin/roles/showFormForAdd"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/roles/role-form"))
+                .andExpect(view().name("roles/role-form"))
                 .andExpect(model().attribute("role", hasProperty("id", is(0))))
                 .andExpect(model().attribute("role", hasProperty("name", nullValue())));
         verifyNoInteractions(roleService);
@@ -92,7 +92,7 @@ public class AdminRoleControllerTest {
                 .param("roleId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/roles/role-form"))
+                .andExpect(view().name("roles/role-form"))
                 .andExpect(model().attribute("role", hasProperty("id", is(1))))
                 .andExpect(model().attribute("role", hasProperty("name", is(role.getName()))));
         verify(roleService, times(1)).findById(1);
@@ -146,7 +146,7 @@ public class AdminRoleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("role", 1))
                 .andExpect(model().attributeHasFieldErrors("role", "name"))
-                .andExpect(view().name("/roles/role-form"));
+                .andExpect(view().name("roles/role-form"));
         verifyNoInteractions(roleService);
     }
 

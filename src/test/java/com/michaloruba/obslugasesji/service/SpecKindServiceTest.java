@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +43,11 @@ public class SpecKindServiceTest {
         specKind.setId(1);
         Optional<SpecKind> tester = Optional.of(specKind);
 
+
         when(specKindRepository.findById(specKind.getId()))
                 .thenReturn(tester);
         when(specKindRepository.findAll())
-                .thenReturn(List.of(specKind));
+                .thenReturn(Arrays.asList(specKind));
     }
 
     @Test

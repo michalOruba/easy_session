@@ -26,13 +26,13 @@ public class AdminRoleController {
     public String showListOfRoles(Model model){
         model.addAttribute("roles", roleService.findAll());
 
-        return "/roles/roles-list";
+        return "roles/roles-list";
     }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model model){
         model.addAttribute("role", new Role());
-        return "/roles/role-form";
+        return "roles/role-form";
     }
 
     @GetMapping("/showFormForUpdate")
@@ -40,16 +40,16 @@ public class AdminRoleController {
         try {
             model.addAttribute("role", roleService.findById(roleId));
         } catch (NotFoundException e){
-            return "/error-404";
+            return "error-404";
         }
 
-        return "/roles/role-form";
+        return "roles/role-form";
     }
 
     @PostMapping("/save")
     public String saveRole(@Valid @ModelAttribute("role") Role role, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "/roles/role-form";
+            return "roles/role-form";
         }
         roleService.save(role);
         return "redirect:/admin/roles/list";
@@ -60,7 +60,7 @@ public class AdminRoleController {
         try {
             roleService.deleteById(roleId);
         } catch (NotFoundException e){
-            return "/error-404";
+            return "error-404";
         }
 
         return "redirect:/admin/roles/list";

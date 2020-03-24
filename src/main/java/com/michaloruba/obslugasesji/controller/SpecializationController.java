@@ -28,13 +28,13 @@ public class SpecializationController {
     @GetMapping("/list")
     public String showListOfSpecs(Model model){
         model.addAttribute("specializations", specializationService.findAll());
-        return "/specializations/specs-list";
+        return "specializations/specs-list";
     }
 
     @GetMapping("/showFormForSelectSpec")
     public String showFormForSelectSpec(Model model){
         model.addAttribute("specKinds", specKindService.findAll());
-        return "/specializations/specs-select-kind";
+        return "specializations/specs-select-kind";
     }
 
     @GetMapping("/showFormForAdd")
@@ -48,9 +48,9 @@ public class SpecializationController {
             List<SpecKind> specKinds = specKindService.findAll();
             model.addAttribute("message", "invalid specialization kind (Can not be null)");
             model.addAttribute("specKinds", specKinds);
-            return "/specializations/specs-select-kind";
+            return "specializations/specs-select-kind";
         }
-        return "/specializations/spec-form";
+        return "specializations/spec-form";
     }
 
     @GetMapping("/showFormForUpdate")
@@ -58,15 +58,15 @@ public class SpecializationController {
         try {
             model.addAttribute("specialization", specializationService.findById(specId));
         } catch (NotFoundException e ){
-            return "/error-404";
+            return "error-404";
         }
-        return "/specializations/spec-form";
+        return "specializations/spec-form";
     }
 
     @PostMapping("/save")
     public String saveSpec(@Valid @ModelAttribute("specialization") InformationSpecialization specialization, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "/specializations/spec-form";
+            return "specializations/spec-form";
         }
         specializationService.save(specialization);
         return "redirect:/specs/list";

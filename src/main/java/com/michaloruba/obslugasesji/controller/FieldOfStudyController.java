@@ -34,19 +34,19 @@ public class FieldOfStudyController {
     public String showListOfFields(Model model){
         List<FieldOfStudy> fields =  fieldOfStudyService.findAll();
         model.addAttribute("fields", fields);
-        return "/fields/fields-list";
+        return "fields/fields-list";
     }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model model){
         model.addAttribute("fieldOfStudy", new InformationTechnology());
-        return "/fields/field-form";
+        return "fields/field-form";
     }
 
     @PostMapping("/save")
     public String saveField(@Valid @ModelAttribute("fieldOfStudy") InformationTechnology fieldOfStudy, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "/fields/field-form";
+            return "fields/field-form";
         }
         fieldOfStudyService.save(fieldOfStudy);
         return "redirect:/fields/list";
@@ -58,10 +58,10 @@ public class FieldOfStudyController {
         try {
             fieldOfStudy = fieldOfStudyService.findById(fieldId);
         } catch (NotFoundException e) {
-            return "/error-404";
+            return "error-404";
         }
         model.addAttribute("fieldOfStudy", fieldOfStudy);
-        return "/fields/field-form";
+        return "fields/field-form";
     }
 
     @GetMapping("/delete")
@@ -69,7 +69,7 @@ public class FieldOfStudyController {
         try {
             fieldOfStudyService.deleteById(fieldId);
         } catch (NotFoundException e){
-            return "/error-404";
+            return "error-404";
         }
 
         return "redirect:/fields/list";

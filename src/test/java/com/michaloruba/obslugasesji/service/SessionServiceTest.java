@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,7 +84,7 @@ public class SessionServiceTest {
         when(sessionRepository.findById(session.getId()))
                 .thenReturn(testerSession);
         when(sessionRepository.findAll())
-                .thenReturn(List.of(session));
+                .thenReturn(Arrays.asList(session));
         when(sessionRepository.findByStudentIdAndSemester(1, 1))
                 .thenReturn(session);
     }

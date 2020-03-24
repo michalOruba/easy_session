@@ -91,7 +91,7 @@ public class SubjectControllerTest {
 
         mvc.perform(get("/subjects/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/subjects/subjects-list"))
+                .andExpect(view().name("subjects/subjects-list"))
                 .andExpect(model().attribute("subjects", new PageImpl<>(subjects)))
                 .andExpect(model().attribute("subjects", hasItem(
                         allOf(
@@ -114,7 +114,7 @@ public class SubjectControllerTest {
 
         mvc.perform(get("/subjects/showFormForAdd"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/subjects/subject-form"))
+                .andExpect(view().name("subjects/subject-form"))
                 .andExpect(model().attribute("subject", hasProperty("id", is(0))))
                 .andExpect(model().attribute("subject", hasProperty("semester", is(0))))
                 .andExpect(model().attribute("subject", hasProperty("name", nullValue())))
@@ -136,7 +136,7 @@ public class SubjectControllerTest {
                 .param("subId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/subjects/subject-form"))
+                .andExpect(view().name("subjects/subject-form"))
                 .andExpect(model().attribute("subject", hasProperty("id", is(subject.getId()))))
                 .andExpect(model().attribute("subject", hasProperty("semester", is(subject.getSemester()))))
                 .andExpect(model().attribute("subject", hasProperty("specialization", is(subject.getSpecialization()))))
@@ -206,7 +206,7 @@ public class SubjectControllerTest {
                 .andExpect(model().attributeHasFieldErrors("subject", "ECTS"))
                 .andExpect(model().attributeHasFieldErrors("subject", "hours"))
                 .andExpect(model().attributeHasFieldErrors("subject", "name"))
-                .andExpect(view().name("/subjects/subject-form"));
+                .andExpect(view().name("subjects/subject-form"));
         verifyNoInteractions(subjectService);
     }
 

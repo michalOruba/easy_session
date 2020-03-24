@@ -106,7 +106,7 @@ public class SubjectGradeControllerTest {
                 .param("sessionId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/grades/session-details"))
+                .andExpect(view().name("grades/session-details"))
                 .andExpect(model().attribute("mySession", session))
                 .andExpect(model().attribute("subjectGrades", hasItem(
                         allOf(
@@ -131,7 +131,7 @@ public class SubjectGradeControllerTest {
                 .param("subjectGradeId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/grades/session-detail-form"))
+                .andExpect(view().name("grades/session-detail-form"))
                 .andExpect(model().attribute("subject", hasProperty("id", is(subjectGrade.getId()))))
                 .andExpect(model().attribute("subject", hasProperty("session", is(subjectGrade.getSession()))))
                 .andExpect(model().attribute("subject", hasProperty("subject", is(subjectGrade.getSubject()))))

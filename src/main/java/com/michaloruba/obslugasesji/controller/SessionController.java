@@ -33,7 +33,7 @@ public class SessionController {
     @GetMapping("/list")
     public String showListOfSessions(Model model){
         model.addAttribute("mySessions", sessionService.findAll());
-        return "/sessions/sessions-list";
+        return "sessions/sessions-list";
     }
 
     @GetMapping("/showFormForAdd")
@@ -42,7 +42,7 @@ public class SessionController {
         model.addAttribute("students", studentService.findAll());
         model.addAttribute("sessionStatus", SessionStatus.values());
         model.addAttribute("mySession", session);
-        return "/sessions/session-form";
+        return "sessions/session-form";
     }
 
     @PostMapping("/save")
@@ -58,7 +58,7 @@ public class SessionController {
         if (bindingResult.hasErrors()){
             model.addAttribute("students", studentService.findAll());
             model.addAttribute("sessionStatus", SessionStatus.values());
-            return "/sessions/session-form";
+            return "sessions/session-form";
         }
         sessionService.save(mySession);
         return "redirect:/sessions/list";
@@ -69,7 +69,7 @@ public class SessionController {
         model.addAttribute("mySession", sessionService.findById(sessionId));
         model.addAttribute("students", studentService.findAll());
         model.addAttribute("sessionStatus", SessionStatus.values());
-        return "/sessions/session-form";
+        return "sessions/session-form";
     }
 
     @GetMapping("/delete")

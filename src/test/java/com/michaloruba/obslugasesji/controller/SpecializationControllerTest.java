@@ -82,7 +82,7 @@ public class SpecializationControllerTest {
 
         mvc.perform(get("/specs/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/specializations/specs-list"))
+                .andExpect(view().name("specializations/specs-list"))
                 .andExpect(model().attribute("specializations", hasSize(1)))
                 .andExpect(model().attribute("specializations", hasItem(
                         allOf(
@@ -103,7 +103,7 @@ public class SpecializationControllerTest {
 
         mvc.perform(get("/specs/showFormForSelectSpec"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/specializations/specs-select-kind"))
+                .andExpect(view().name("specializations/specs-select-kind"))
                 .andExpect(model().attribute("specKinds", hasSize(1)))
                 .andExpect(model().attribute("specKinds", hasItem(
                         allOf(
@@ -128,7 +128,7 @@ public class SpecializationControllerTest {
                 .param("specKindId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/specializations/spec-form"))
+                .andExpect(view().name("specializations/spec-form"))
                 .andExpect(model().attribute("specialization", hasProperty("id", is(0))))
                 .andExpect(model().attribute("specialization", hasProperty("startDate", nullValue())))
                 .andExpect(model().attribute("specialization", hasProperty("endDate", nullValue())))
@@ -173,7 +173,7 @@ public class SpecializationControllerTest {
                 .param("specId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/specializations/spec-form"))
+                .andExpect(view().name("specializations/spec-form"))
                 .andExpect(model().attribute("specialization", hasProperty("id", is(specialization.getId()))))
                 .andExpect(model().attribute("specialization", hasProperty("specKind", is(specialization.getSpecKind()))))
                 .andExpect(model().attribute("specialization", hasProperty("startDate", is(specialization.getStartDate()))))
@@ -229,7 +229,7 @@ public class SpecializationControllerTest {
                 .andExpect(model().attributeErrorCount("specialization", 2))
                 .andExpect(model().attributeHasFieldErrors("specialization", "startDate"))
                 .andExpect(model().attributeHasFieldErrors("specialization", "endDate"))
-                .andExpect(view().name("/specializations/spec-form"));
+                .andExpect(view().name("specializations/spec-form"));
         verifyNoInteractions(specializationService);
     }
 

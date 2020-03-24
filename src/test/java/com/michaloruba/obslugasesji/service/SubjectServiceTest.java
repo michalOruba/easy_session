@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,11 +57,11 @@ public class SubjectServiceTest {
         when(subjectRepository.findById(subject.getId()))
                 .thenReturn(testerSubject);
         when(subjectRepository.findAll())
-                .thenReturn(List.of(subject));
+                .thenReturn(Arrays.asList(subject));
         when(subjectRepository.findAllBySemesterAndSpecialization(subject.getSemester(), subject.getSpecialization()))
-                .thenReturn(List.of(subject));
+                .thenReturn(Arrays.asList(subject));
         when(subjectRepository.findByName(subject.getName(), PageRequest.of(0, 5)))
-                .thenReturn(new PageImpl<>(List.of(subject)));
+                .thenReturn(new PageImpl<>(Arrays.asList(subject)));
     }
 
     @Test

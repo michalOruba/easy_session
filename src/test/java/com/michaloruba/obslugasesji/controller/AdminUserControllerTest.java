@@ -75,7 +75,7 @@ public class AdminUserControllerTest {
 
         mvc.perform(get("/admin/users/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/users/users-list"))
+                .andExpect(view().name("users/users-list"))
                 .andExpect(model().attribute("users", hasSize(1)))
                 .andExpect(model().attribute("users", hasItem(
                         allOf(
@@ -100,7 +100,7 @@ public class AdminUserControllerTest {
                 .param("userName", "test")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/users/user-form"));
+                .andExpect(view().name("users/user-form"));
         verify(userService, times(1)).findByUserName("test");
         verifyNoMoreInteractions(userService);
     }
@@ -135,7 +135,7 @@ public class AdminUserControllerTest {
                     .param("userName", "test")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/users/role-form"))
+                .andExpect(view().name("users/role-form"))
                 .andExpect(model().attribute("user", hasProperty("id", is(user.getId()))))
                 .andExpect(model().attribute("user", hasProperty("firstName", is(user.getFirstName()))))
                 .andExpect(model().attribute("user", hasProperty("lastName", is(user.getLastName()))))
@@ -203,7 +203,7 @@ public class AdminUserControllerTest {
                 .andExpect(model().attributeHasFieldErrors("user", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("user", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("user", "email"))
-                .andExpect(view().name("/users/user-form"));
+                .andExpect(view().name("users/user-form"));
         verifyNoInteractions(userService);
     }
 

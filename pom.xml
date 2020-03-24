@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<start-class>com.michaloruba.obslugasesji.ObslugaSesjiApplication</start-class>
 	</properties>
 
 	<dependencies>
@@ -141,5 +142,54 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>beanstalk</id>
+			<build>
+				<finalName>${project.name}-eb</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<spring.profiles.active>
+					demo
+				</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>beanstalk-compile-to-java-8</id>
+			<build>
+				<finalName>${project.name}-eb</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>1.8</source>
+							<target>1.8</target>
+							<excludes>
+								<exclude>**/cloud/config/*.java</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<spring.profiles.active>
+					demo
+				</spring.profiles.active>
+			</properties>
+		</profile>
+	</profiles>
+
 
 </project>

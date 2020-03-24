@@ -54,14 +54,14 @@ public class SubjectController {
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        return "/subjects/subjects-list";
+        return "subjects/subjects-list";
     }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model model){
         model.addAttribute("subject", new Subject());
         model.addAttribute("specs", specializationService.findAll());
-        return "/subjects/subject-form";
+        return "subjects/subject-form";
     }
 
     @PostMapping("/save")
@@ -77,7 +77,7 @@ public class SubjectController {
         }
         if (bindingResult.hasErrors()){
             model.addAttribute("specs", specializationService.findAll());
-            return "/subjects/subject-form";
+            return "subjects/subject-form";
         }
         subjectService.save(subject);
         return "redirect:/subjects/list";
@@ -87,7 +87,7 @@ public class SubjectController {
     public String showFormForUpdate(@RequestParam("subId") int subId, Model model){
         model.addAttribute("subject", subjectService.findById(subId));
         model.addAttribute("specs", specializationService.findAll());
-        return "/subjects/subject-form";
+        return "subjects/subject-form";
     }
 
     @GetMapping("/delete")

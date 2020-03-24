@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class RoleServiceTest {
         when(roleRepository.findById(role.getId()))
                 .thenReturn(tester);
         when(roleRepository.findAll())
-                .thenReturn(List.of(role));
+                .thenReturn(Arrays.asList(role));
         when(roleRepository.findRoleByName(role.getName()))
                 .thenReturn(role);
     }

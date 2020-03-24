@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class UserServiceTest {
         when(userRepository.findByUserName(user.getUserName()))
                 .thenReturn(user);
         when(userRepository.findAll())
-                .thenReturn(List.of(user));
+                .thenReturn(Arrays.asList(user));
     }
 
     @Test

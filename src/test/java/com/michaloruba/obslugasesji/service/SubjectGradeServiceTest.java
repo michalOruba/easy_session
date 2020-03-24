@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,9 +56,9 @@ public class SubjectGradeServiceTest {
         when(subjectGradeRepository.findById(subjectGrade.getId()))
                 .thenReturn(testerSubjectGrade);
         when(subjectGradeRepository.findAll())
-                .thenReturn(List.of(subjectGrade));
+                .thenReturn(Arrays.asList(subjectGrade));
         when(subjectGradeRepository.findAllBySession(session))
-                .thenReturn(List.of(subjectGrade));
+                .thenReturn(Arrays.asList(subjectGrade));
     }
 
     @Test

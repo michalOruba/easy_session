@@ -43,7 +43,7 @@ public class StudentController {
     @GetMapping("/list")
     public String showListOfStudents(Model model){
         model.addAttribute("students", studentService.findAll());
-        return "/students/students-list";
+        return "students/students-list";
     }
 
     @GetMapping("/showFormForAdd")
@@ -51,7 +51,7 @@ public class StudentController {
         Student student = new Student();
         model.addAttribute("student", student);
         model.addAttribute("specs", specializationService.findAll());
-        return "/students/student-form";
+        return "students/student-form";
     }
 
     @PostMapping("/save")
@@ -65,7 +65,7 @@ public class StudentController {
         }
         if (bindingResult.hasErrors()){
             model.addAttribute("specs", specializationService.findAll());
-            return "/students/student-form";
+            return "students/student-form";
         }
         student.setSpecialization(specialization);
         studentService.save(student);
@@ -76,7 +76,7 @@ public class StudentController {
     public String updateStudent(@RequestParam("studentId") int studentId ,Model model){
         model.addAttribute("student", studentService.findById(studentId));
         model.addAttribute("specs", specializationService.findAll());
-        return "/students/student-form";
+        return "students/student-form";
     }
 
     @GetMapping("/delete")
@@ -84,7 +84,7 @@ public class StudentController {
         try {
             studentService.deleteById(id);
         } catch (NotFoundException e){
-            return "/error-404";
+            return "error-404";
         }
         return "redirect:/students/list";
     }
@@ -98,7 +98,7 @@ public class StudentController {
             model.addAttribute("students", studentService.searchForStudent(Integer.parseInt(usernameOrId)));
         }
         model.addAttribute("input", usernameOrId);
-        return "/students/students-list";
+        return "students/students-list";
     }
 
     @GetMapping("/showSessionDetails")
@@ -108,7 +108,7 @@ public class StudentController {
         if(session == null){
             model.addAttribute("errorMessage", "Sorry, no active session was found for this Student");
             model.addAttribute("students", studentService.findAll());
-            return "/students/students-list";
+            return "students/students-list";
         }
         attributes.addAttribute("sessionId", session.getId());
         return "redirect:/grades/showSessionDetails";

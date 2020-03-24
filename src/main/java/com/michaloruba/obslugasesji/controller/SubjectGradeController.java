@@ -34,11 +34,11 @@ public class SubjectGradeController {
             foundSession = sessionService.findById(sessionId);
         } catch (NotFoundException e){
             logger.warn(e.getMessage());
-            return "/error-404";
+            return "error-404";
         }
         model.addAttribute("mySession", foundSession);
         model.addAttribute("subjectGrades", subjectGradeService.findAllBySession(foundSession));
-        return "/grades/session-details";
+        return "grades/session-details";
     }
 
     @GetMapping("/showFormForUpdateGrade")
@@ -46,10 +46,10 @@ public class SubjectGradeController {
         try {
             model.addAttribute("subject", subjectGradeService.findById(subjectGradeId));
         } catch (NotFoundException e){
-            return "/error-404";
+            return "error-404";
         }
         model.addAttribute("grades", SubjectGradeTypes.values());
-        return "/grades/session-detail-form";
+        return "grades/session-detail-form";
     }
 
     @PostMapping("/saveDetail")
@@ -57,7 +57,7 @@ public class SubjectGradeController {
         if (bindingResult.hasErrors()){
             logger.warn(bindingResult.toString());
             model.addAttribute("grades", SubjectGradeTypes.values());
-            return "/grades/session-detail-form";
+            return "grades/session-detail-form";
         }
         subjectGradeService.save(subjectGrade);
         attributes.addAttribute("sessionId", subjectGrade.getSession().getId());

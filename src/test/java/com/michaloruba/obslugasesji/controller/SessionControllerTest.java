@@ -79,7 +79,7 @@ public class SessionControllerTest {
 
         mvc.perform(get("/sessions/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/sessions/sessions-list"))
+                .andExpect(view().name("sessions/sessions-list"))
                 .andExpect(model().attribute("mySessions", hasSize(1)))
                 .andExpect(model().attribute("mySessions", hasItem(
                         allOf(
@@ -100,7 +100,7 @@ public class SessionControllerTest {
 
         mvc.perform(get("/sessions/showFormForAdd"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/sessions/session-form"))
+                .andExpect(view().name("sessions/session-form"))
                 .andExpect(model().attribute("mySession", hasProperty("id", is(0))))
                 .andExpect(model().attribute("mySession", hasProperty("semester", is(0))))
                 .andExpect(model().attribute("sessionStatus", SessionStatus.values()))
@@ -128,7 +128,7 @@ public class SessionControllerTest {
                 .param("sessionId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/sessions/session-form"))
+                .andExpect(view().name("sessions/session-form"))
                 .andExpect(model().attribute("mySession", hasProperty("id", is(1))))
                 .andExpect(model().attribute("mySession", hasProperty("semester", is(1))))
                 .andExpect(model().attribute("sessionStatus", SessionStatus.values()))
@@ -195,7 +195,7 @@ public class SessionControllerTest {
                 .andExpect(model().attributeErrorCount("mySession", 2))
                 .andExpect(model().attributeHasFieldErrors("mySession", "semester"))
                 .andExpect(model().attributeHasFieldErrors("mySession", "student"))
-                .andExpect(view().name("/sessions/session-form"));
+                .andExpect(view().name("sessions/session-form"));
         verifyNoInteractions(sessionService);
     }
 

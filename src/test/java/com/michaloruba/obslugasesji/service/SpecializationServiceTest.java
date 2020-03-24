@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class SpecializationServiceTest {
         when(specializationRepository.findById(specialization.getId()))
                 .thenReturn(tester);
         when(specializationRepository.findAll())
-                .thenReturn(List.of(specialization));
+                .thenReturn(Arrays.asList(specialization));
     }
 
     @Test

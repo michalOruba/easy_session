@@ -61,7 +61,7 @@ public class FieldOfStudyControllerTest {
 
         mvc.perform(get("/fields/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/fields/fields-list"))
+                .andExpect(view().name("fields/fields-list"))
                 .andExpect(model().attribute("fields", hasSize(1)))
                 .andExpect(model().attribute("fields", hasItem(
                         allOf(
@@ -78,7 +78,7 @@ public class FieldOfStudyControllerTest {
     public void showFormForAdd_ShouldAddEmptyFieldToModelAndRenderFieldForm() throws Exception {
         mvc.perform(get("/fields/showFormForAdd"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/fields/field-form"))
+                .andExpect(view().name("fields/field-form"))
                 .andExpect(model().attribute("fieldOfStudy", hasProperty("id", is(0))))
                 .andExpect(model().attribute("fieldOfStudy", hasProperty("name", nullValue())));
         verifyNoInteractions(fieldOfStudyService);
@@ -93,7 +93,7 @@ public class FieldOfStudyControllerTest {
                 .param("fieldId", "1")
         )
                 .andExpect(status().isOk())
-                .andExpect(view().name("/fields/field-form"))
+                .andExpect(view().name("fields/field-form"))
                 .andExpect(model().attribute("fieldOfStudy", hasProperty("id", is(1))))
                 .andExpect(model().attribute("fieldOfStudy", hasProperty("name", is(fieldOfStudy.getName()))));
         verify(fieldOfStudyService, times(1)).findById(1);
@@ -147,7 +147,7 @@ public class FieldOfStudyControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeErrorCount("fieldOfStudy", 1))
                 .andExpect(model().attributeHasFieldErrors("fieldOfStudy", "name"))
-                .andExpect(view().name("/fields/field-form"));
+                .andExpect(view().name("fields/field-form"));
         verifyNoInteractions(fieldOfStudyService);
     }
 
